@@ -1,8 +1,12 @@
 # LFT
-Raccolta di esercizi di LFT Lab
+Raccolta di esercizi di LFT Lab e progetto
+
+
+
 
 
 Comandi utili GitHub
+
 
 
 git clone httpsindirizzo per inizializzare e copiare la repo nella /home/LFT
