@@ -22,7 +22,7 @@ public class Matricola {
           state = 2;
         } else if (ch == '0' || ch == '2' || ch == '4' || ch == '6' || ch == '8') {
           state = 1;
-        } else if ((ch >= 65 && ch <= 75) || (ch >= 97 && ch <= 107)){
+        } else if (ch >= 65 && ch <= 75){
           state = 3;
         } else {
           state = -1;
@@ -32,12 +32,21 @@ public class Matricola {
         case 2:
         if (ch == '0' || ch == '2' || ch == '4' || ch == '6' || ch == '8') {
           state = 1;
-        } else if ((ch >= 76 && ch <= 90) || (ch >= 108 && ch <= 122)){
+        } else if (ch == '1' || ch == '3' || ch == '5' || ch == '7' || ch == '9') {
+          state = 2;
+        } else if (ch >= 76 && ch <= 90) {
           state = 3;
         } else {
           state = -1;
         }
         break;
+
+        case 3:
+        if (ch >= 97 && ch <= 122){
+          state = 3;
+        } else {
+          state = -1;
+        }
       }
     }
     return state == 3;
