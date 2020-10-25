@@ -13,9 +13,9 @@ public class Es4{
         case 0:
         if(ch == ' ')
             state = 0;
-        else if((int)ch == 1)
+        else if((int)ch  % 2 == 1)
             state = 1;
-        else if((int)ch == 0)
+        else if((int)ch  % 2 == 0)
             state = 2;
         else 
             state = -1;
@@ -26,9 +26,9 @@ public class Es4{
             state = 3;
         else if(ch >= 'L' &&  ch <= 'Z')
             state = 5;
-        else if((int)ch == 1)
+        else if((int)ch % 2 == 1)
             state = 1;
-        else if((int)ch == 0)
+        else if((int)ch  % 2 == 0)
             state = 2;
         else 
             state = 1;
@@ -39,9 +39,9 @@ public class Es4{
             state = 4;
         else if(ch >= 'A' &&  ch <= 'K')
             state = 5;
-        else if((int)ch == 0)
+        else if((int)ch  % 2 == 0)
             state = 2;
-        else if((int)ch == 1)
+        else if((int)ch  % 2 == 1)
             state = 1;
         else 
             state = 1;
