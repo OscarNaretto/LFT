@@ -77,6 +77,6 @@ public class Esercizio_4Daniele {
     }
 
     public static void main(String args[]){
-        System.out.println(scan("654322 Rossi") ? "OK" : "NOPE");
+        System.out.println(scan(args[0]) ? "OK" : "NOPE");
     }    
 }
