@@ -1,4 +1,4 @@
-public class Es5{
+public class Es5Vincenzo{
 
     public static boolean scan(String s) 
     {

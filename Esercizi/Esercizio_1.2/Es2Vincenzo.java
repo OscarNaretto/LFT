@@ -1,4 +1,4 @@
-public class Es2
+public class Es2Vincenzo
 {
     public static boolean scan(String s)
     {

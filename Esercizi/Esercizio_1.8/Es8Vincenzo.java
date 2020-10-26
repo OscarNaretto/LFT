@@ -1,4 +1,4 @@
-public class Es8{
+public class Es8Vincenzo{
 
     public static boolean scan(String s) 
     {

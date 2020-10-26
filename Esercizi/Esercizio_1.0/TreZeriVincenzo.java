@@ -1,6 +1,7 @@
-public class NonTreZeri
+
+public class TreZeriVincenzo
 {
-    public boolean scan(String s)
+    public static boolean scan(String s)
     {
 	int state = 0;
 	int i = 0;
@@ -28,9 +29,9 @@ public class NonTreZeri
 		break;
 
 	    case 2:
-		if (ch == '1')
+		if (ch == '0')
 		    state = 3;
-		else if (ch == '0')
+		else if (ch == '1')
 		    state = 0;
 		else
 		    state = -1;
@@ -49,6 +50,6 @@ public class NonTreZeri
 
     public static void main(String[] args)
     {
-	System.out.println(scan(args[0]) ? "OK" :"NOPE");
+	System.out.println(scan(args[0]) ? "OK" : "NOPE");
     }
 }
