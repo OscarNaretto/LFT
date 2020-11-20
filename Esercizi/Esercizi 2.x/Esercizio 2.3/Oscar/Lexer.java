@@ -13,15 +13,49 @@ public class Lexer {
         }
     }
 
-    public Token lexical_scan(BufferedReader br) {
+    private void cleaner(BufferedReader br){
         /* metodo che esegue la traduzione in token del testo in imput */
 		/* se durante la traduzione vengono incontrati spazi, new line, ecc vengono ingorati e viene letto il carattere successivo*/
         while (peek == ' ' || peek == '\t' || peek == '\n'  || peek == '\r') {
             if (peek == '\n') line++;
             readch(br);
         }
+    }
+
+    public Token lexical_scan(BufferedReader br) {
+        
+        cleaner(br);
+
+        if (peek == '/'){
+            readch(br);
+            if (peek == '/') {
+                while (peek != (char)-1 && peek != '\n') {
+                   readch(br); 
+                }
+                if (peek != (char)-1) {
+                    readch(br);
+                }
+            } else if (peek == '*') {
+                boolean flag = true;
+                while (flag) {
+                    readch(br);
+                    if (peek == '*') {
+                        readch(br);
+                        if (peek == '/'){
+                            flag = false;
+                        }
+                    }
+                }
+                readch(br);
+                cleaner(br);
+            } else {
+                peek = ' ';
+                return Token.div;
+            }
+        }
 
         switch (peek) {
+
             case '!':
                 peek = ' ';  /* se viene letto un carattere, rimette peek a ' ' per il buon funzionamento dello scanner */
                 return Token.not;
@@ -54,10 +88,6 @@ public class Lexer {
             case '*':
                 peek = ' ';
                 return Token.mult;
-
-            case '/':
-                peek = ' ';
-                return Token.div;
 
             case ';':
                 peek = ' ';
@@ -111,9 +141,10 @@ public class Lexer {
                 if(peek == '='){
                     peek = ' ';
                     return Word.eq;
-                }else
+                } else {
                     peek = ' ';
                     return Token.assign;
+                }
 
             case (char)-1:
                 return new Token(Tag.EOF);
@@ -183,7 +214,7 @@ public class Lexer {
 
     public static void main(String[] args) {
         Lexer lex = new Lexer();
-        String path = "Oscar/testo.txt"; // il percorso del file da leggere
+        String path = "testo.txt"; // il percorso del file da leggere
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             Token tok;
