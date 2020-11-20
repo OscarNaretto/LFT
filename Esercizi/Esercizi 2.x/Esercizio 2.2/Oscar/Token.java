@@ -13,6 +13,5 @@ public class Token {
 	mult = new Token('*'),
 	div = new Token('/'),
 	assign = new Token('='),
-	semicolon = new Token(';'),
-	underscore = new Token('_');
+	semicolon = new Token(';');
 }

@@ -63,15 +63,6 @@ public class Lexer {
                 peek = ' ';
                 return Token.semicolon;
 
-            case '_':
-                readch(br);
-                if (peek != (char)-1){
-                    return Token.underscore;
-                } else {
-                    System.err.println("Non c'è nulla dopo l'underscore");
-                    return null;
-                }
-
             case '&':
                 readch(br);
                 if (peek == '&') {
@@ -128,75 +119,71 @@ public class Lexer {
                 return new Token(Tag.EOF);
                                                     // se peek non corrisponde a nessuno dei simboli conosciuti
             default:
-                if (Character.isLetter(peek)) {     // se peek è una lettera, potrebbe essere l'inizio di una
-                                                        //parola chiave o di una nuova parola identificatore
+                if (Character.isLetter(peek) || peek == '_') {     // se peek è una lettera, potrebbe essere l'inizio di una
+                                                                   //parola chiave o di una nuova parola identificatore
 
         // ... gestire il caso degli identificatori e delle parole chiave //
 
                 String identificatore = "";
-                while(Character.isLetter(peek)){  //continuo a comporre la stringa s finche trovo una lettera
+                while(Character.isLetter(peek) || Character.isDigit(peek) || peek == '_'){  //continuo a comporre la stringa s finche trovo una lettera
                     identificatore += peek;
                     readch(br);
                 }
 
                 switch(identificatore){
-                    case "cond":
-                        identificatore = "";
-                        return Word.cond;
+                    case "cond": return Word.cond;
 
-                    case "when":
-                        identificatore = "";
-                        return Word.when;
+                    case "when": return Word.when;
 
-                    case "then":
-                        identificatore = "";
-                        return Word.then;
+                    case "then": return Word.then;
 
-                    case "else":
-                        identificatore = "";
-                        return Word.elsetok;
+                    case "else": return Word.elsetok;
 
-                    case "while":
-                        identificatore = "";
-                        return Word.whiletok;
+                    case "while": return Word.whiletok;
 
-                    case "do":
-                        identificatore = "";
-                        return Word.dotok;
+                    case "do": return Word.dotok;
 
-                    case "seq":
-                        identificatore = "";
-                        return Word.seq;
+                    case "seq": return Word.seq;
 
-                    case "print":
-                        identificatore = "";
-                        return Word.print;
+                    case "print": return Word.print;
 
-                    case "read":
-                        identificatore = "";
-                        return Word.read;
+                    case "read": return Word.read;
+
+                    case "_":
+                        System.err.println("Errore: solo underscore");
+                        return null;
+
+                    default: return new Word(Tag.ID,identificatore);
                 }
 
-                return new Word(Tag.ID,identificatore);
+
             } else if (Character.isDigit(peek)) {
 
         // ... gestire il caso dei numeri ... //
                 String Numero = "";
+
                 while(Character.isDigit(peek)){
                     Numero += peek;
                     readch(br);
                 }
-                return new NumberTok(Integer.parseInt(Numero));
+
+                if (Character.isDigit(peek)){
+                    return new NumberTok(Integer.parseInt(Numero));
+
                 } else {
-                      System.err.println("Erroneous character: " + peek );
-                      return null;
+                    System.err.println("Non puoi mettere un numero in testa");
+                    return null;
                 }
+            } else {
+                System.err.println("Erroneous character");
+                return null;
+            }
         }
     }
 
     public static void main(String[] args) {
         Lexer lex = new Lexer();
-        String path = "testo.txt"; // il percorso del file da leggere
+        String path = "Oscar/testo.txt"; // il percorso del file da leggere
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             Token tok;
