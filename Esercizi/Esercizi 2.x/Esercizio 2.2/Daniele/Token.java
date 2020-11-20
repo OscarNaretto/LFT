@@ -1,4 +1,4 @@
-public class Token {
+public class Token{
     public final int tag;
     public Token(int t) { tag = t;  }
     public String toString() {return "<" + tag + ">";}
@@ -13,5 +13,5 @@ public class Token {
 	mult = new Token('*'),
 	div = new Token('/'),
 	assign = new Token('='),
-	semicolon = new Token(';');    
+	semicolon = new Token(';');
 }

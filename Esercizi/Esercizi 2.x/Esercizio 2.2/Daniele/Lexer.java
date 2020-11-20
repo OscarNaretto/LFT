@@ -1,9 +1,9 @@
 import java.io.*; 
 
 public class Lexer {
-
     public static int line = 1;
     private char peek = ' ';
+    
     
     private void readch(BufferedReader br) {   /* metodo che legge il CARATTERE SUCCESSIVO */
         try {
@@ -14,6 +14,7 @@ public class Lexer {
     }
 
     public Token lexical_scan(BufferedReader br) {  
+
         /* metodo che esegue la traduzione in token del testo in imput */ 
 		/* se durante la traduzione vengono incontrati spazi, new line, ecc vengono ingorati e viene letto il carattere successivo*/
         while (peek == ' ' || peek == '\t' || peek == '\n'  || peek == '\r') {
@@ -62,7 +63,7 @@ public class Lexer {
             case ';':
                 peek = ' ';
                 return Token.semicolon;
-            
+                            
             case '&':
                 readch(br);
                 if (peek == '&') {
@@ -120,13 +121,13 @@ public class Lexer {
                 return new Token(Tag.EOF);
                                                     // se peek non corrisponde a nessuno dei simboli conosciuti 
             default:                                          
-                if (Character.isLetter(peek)) {     // se peek è una lettera, potrebbe essere l'inizio di una
+                if (Character.isLetter(peek) || peek == '_') {     // se peek è una lettera, potrebbe essere l'inizio di una
                                                         //parola chiave o di una nuova parola identificatore
 
         // ... gestire il caso degli identificatori e delle parole chiave //
-
                 String identificatore = "";
-                while(Character.isLetter(peek)){  //continuo a comporre la stringa s finche trovo una lettera
+                while(Character.isLetter(peek) || Character.isDigit(peek) || peek == '_'){  //continuo a comporre la stringa s finche trovo una lettera
+                                                                                                // numeri e _
                     identificatore += peek;
                     readch(br);
                 }
@@ -167,6 +168,11 @@ public class Lexer {
                     case "read":
                         identificatore = "";
                         return Word.read;
+                    
+                    case "_":
+                        identificatore = "";
+                        System.err.println("Non c'è nulla dopo l'underscore");
+                        return null;
                 }
 
                 String x = identificatore;
@@ -178,19 +184,23 @@ public class Lexer {
 
         // ... gestire il caso dei numeri ... //
                 String Numero = "";
-                while(Character.isDigit(peek)){
+                while(Character.isDigit(peek)){ //finchè leggo numeri
                     Numero = Numero + peek;
                     readch(br);
                 }
-                String x = Numero;
-                Numero = "";
-                return new NumberTok(Integer.parseInt(x));
 
-
-                } else {
-                        System.err.println("Erroneous character: " 
-                                + peek );
-                        return null;
+                if(Character.isDigit(peek)){
+                    String x = Numero;
+                    Numero = "";
+                    return new NumberTok(Integer.parseInt(x));
+                }else{ // Se l'ultimo carattere letto non è un numero
+                    System.err.println("Errore, non puoi inziare con un numero");
+                    return null;
+                }
+            
+            }else {
+                    System.err.println("Erroneous character: " + peek );
+                    return null;
                 }
         }
     }
