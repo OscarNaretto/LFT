@@ -17,13 +17,13 @@ public class Parser {
     }
 
     void error(String s) {
-	throw new Error("near line " + lex.line + ": " + s);
+	    throw new Error("near line " + lex.line + ": " + s);
     }
 
     void match(int t) {
-	if (look.tag == t) {
-	    if (look.tag != Tag.EOF) move();
-	} else error("syntax error");
+	    if (look.tag == t) {
+	        if (look.tag != Tag.EOF) move();
+	    } else error("syntax error");
     }
 
     public void start() {
@@ -57,14 +57,14 @@ public class Parser {
             case '+':
                 match(Token.plus.tag);
                 term();
-                expr();
+                exprp();
                 break;
             case '-':
                 match(Token.minus.tag);
                 term();
-                expr();
+                exprp();
                 break;
-            case ')': break;               //i due casi epsilon, quindi nessuna produzione rilevante. da vedere se necessario break dopo )
+            case ')': break;              //i due casi epsilon, quindi nessuna produzione rilevante. da vedere se necessario break dopo )
             case Tag.EOF: break;
 	    }
     }
@@ -94,7 +94,7 @@ public class Parser {
                 fact();
                 termp();
                 break;
-            case '+': break;    //4 casi con produzione epsilon di nuovo
+            case '+': break;               //4 casi con produzione epsilon di nuovo
             case '-': break;
             case ')': break;
             case Tag.EOF: break;
@@ -104,9 +104,9 @@ public class Parser {
     private void fact() {
         switch (look.tag){
             case '(':
-                match(Token.lpg.tag);
+                match(Token.lpt.tag);
                 expr();
-                match(Token.rpg.tag);
+                match(Token.rpt.tag);
                 break;
             case Tag.NUM:
                 match(Tag.NUM);
