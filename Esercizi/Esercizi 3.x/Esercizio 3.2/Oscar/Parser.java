@@ -26,256 +26,92 @@ public class Parser {
 	    } else error("syntax error");
     }
 
-    public void prog() {
+    public void start() {
         switch (look.tag){
-            case '=':
-                statlist();
-                match(Tag.EOF);
-                break;
-            case Tag.PRINT:
-                statlist();
-                match(Tag.EOF);
-                break;
-            case Tag.READ:
-                statlist();
-                match(Tag.EOF);
-                break;
-            case Tag.COND:
-                statlist();
-                match(Tag.EOF);
-                break;
-            case Tag.WHILE:
-                statlist();
-                match(Tag.EOF);
-                break;
-            case '{':
-                statlist();
+            case '(':
+            case Tag.NUM:
+                expr();
                 match(Tag.EOF);
                 break;
         }
     }
 
-    private void statlist() {
+    private void expr() {
         switch (look.tag){
-            case '=':
-                stat();
-                statlistp();
-                break;
-            case Tag.PRINT:
-                stat();
-                statlistp();
-                break;
-            case Tag.READ:
-                stat();
-                statlistp();
-                break;
-            case Tag.COND:
-                stat();
-                statlistp();
-                break;
-            case Tag.WHILE:
-                stat();
-                statlistp();
-                break;
-            case '{':
-                stat();
-                statlistp();
+            case '(':
+            case Tag.NUM:
+                term(); 
+                exprp();
                 break;
         }
     }
 
-    private void statlistp() {
+    private void exprp() {
 	    switch (look.tag) {
-            case ';':
-                match(Token.semicolon.tag);
-                stat();
-                statlistp();
+            case '+':
+                match(Token.plus.tag);
+                term();
+                exprp();
                 break;
+            case '-':
+                match(Token.minus.tag);
+                term();
+                exprp();
+                break;
+            case ')': break;              //i due casi epsilon, quindi nessuna produzione rilevante
             case Tag.EOF: break;
 	    }
     }
 
-    private void stat() {
+    private void term() {
         switch (look.tag){
-            case '=':
-                match(Token.assign.tag);
-                match(Tag.ID);
-                expr();
-                break;
-            case Tag.PRINT:
-                match(Tag.PRINT);
-                match(Token.lpt.tag);
-                exprlist();
-                match(Token.rpt.tag);
-                break;
-            case Tag.READ:
-                match(Tag.READ);
-                match(Token.lpt.tag);
-                match(Tag.ID);
-                match(Token.rpt.tag);
-                break;
-            case Tag.COND:
-                match(Tag.COND);
-                whenlist();
-                match(Tag.ELSE);
-                stat();
-                break;
-            case Tag.WHILE:
-                match(Tag.WHILE);
-                match(Token.lpt.tag);
-                bexpr();
-                match(Token.rpt.tag);                
-                stat();
-                break;
-            case '{':
-                match(Token.lpg.tag);
-                statlist();
-                match(Token.rpg.tag);
+            case '(':
+            case Tag.NUM:
+                fact();
+                termp();
                 break;
         }
     }
 
-    private void whenlist() {
+    private void termp() {
         switch (look.tag){
-            case Tag.WHEN:
-                whenitem();
-                whenlistp();
-                break;
-        }
-    }
-
-    private void whenlistp() {
-        switch (look.tag){
-            case Tag.WHEN:      //eliminata la transizione epsilon
-                whenitem();
-                whenlistp();
-                break;
-        }
-    }
-
-    private void whenitem() {
-        switch (look.tag){
-            case Tag.WHEN:      
-                match(Tag.WHEN);
-                match(Token.lpt.tag);
-                bexpr();
-                match(Token.rpt.tag);
-                match(Tag.DO);
-                stat();
-                break;
-        }
-    }
-
-    private void bexpr() {
-        switch (look.tag){
-            case Tag.RELOP:      
-                match(Tag.RELOP);
-                expr();
-                expr();
-                break;
-        }
-    }
-    
-    private void expr() {
-        switch (look.tag){
-            case '+':      
-                match(Token.plus.tag);
-                match(Token.lpt.tag);
-                exprlist();
-                match(Token.rpt.tag);
-                break;
-            case '-':
-                match(Token.minus.tag);
-                expr();
-                expr();
-                break;
             case '*':
                 match(Token.mult.tag);
-                match(Token.lpt.tag);
-                exprlist();
-                match(Token.rpt.tag);
+                fact();
+                termp();
                 break;
             case '/':
                 match(Token.div.tag);
+                fact();
+                termp();
+                break;
+            case '+':               //4 casi con produzione epsilon di nuovo
+            case '-':
+            case ')':
+            case Tag.EOF: break;
+        }
+    }
+
+    private void fact() {
+        switch (look.tag){
+            case '(':
                 match(Token.lpt.tag);
-                exprlist();
+                expr();
                 match(Token.rpt.tag);
                 break;
             case Tag.NUM:
                 match(Tag.NUM);
                 break;
-            case Tag.ID:
-                match(Tag.ID);
-                break;
         }
     }
-
-    private void exprlist() {
-        switch (look.tag){
-            case '+':      
-                expr();
-                exprlistp();
-                break;
-            case '-':      
-                expr();
-                exprlistp();
-                break;
-            case '*':      
-                expr();
-                exprlistp();
-                break;
-            case '/':      
-                expr();
-                exprlistp();
-                break;
-            case Tag.NUM:      
-                expr();
-                exprlistp();
-                break;
-            case Tag.ID:      
-                expr();
-                exprlistp();
-                break;
-        }
-    }
-
-    private void exprlistp() {
-        switch (look.tag){
-            case '+':      
-                expr();
-                exprlistp();
-                break;
-            case '-':      
-                expr();
-                exprlistp();
-                break;
-            case '*':      
-                expr();
-                exprlistp();
-                break;
-            case '/':      
-                expr();
-                exprlistp();
-                break;
-            case Tag.NUM:      
-                expr();
-                exprlistp();
-                break;
-            case Tag.ID:      
-                expr();
-                exprlistp();
-                break;
-            case ')': break;
-        }
-    }
-    
+		
     public static void main(String[] args) {
         Lexer lex = new Lexer();
         String path = "testo.txt"; // il percorso del file da leggere
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             Parser parser = new Parser(lex, br);
-            parser.prog();
+            parser.start();
             System.out.println("Input OK");
             br.close();
         } catch (IOException e) {e.printStackTrace();}
