@@ -58,7 +58,7 @@ public class Parser {
                 term();
                 exprp();
                 break;
-            case ')': break;              //i due casi epsilon, quindi nessuna produzione rilevante
+            case ')':              //i due casi epsilon, quindi nessuna produzione rilevante
             case Tag.EOF: break;
 	    }
     }
