@@ -6,9 +6,9 @@ public class Valutatore {
     private Token look;
 
     public Valutatore(Lexer l, BufferedReader br) { 
-	lex = l; 
-	pbr = br;
-	move(); 
+	    lex = l; 
+	    pbr = br;
+	    move(); 
     }
    
     void move() { 
