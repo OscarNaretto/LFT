@@ -31,18 +31,27 @@ public class Translator {
     }
 
     public void prog() {        
-	// ... completare ...
-        int lnext_prog = code.newLabel();
-        statlist(lnext_prog);
-        code.emitLabel(lnext_prog);
-        match(Tag.EOF);
-        try {
-        	code.toJasmin();
+        switch(look.tag){
+            case '=':
+            case Tag.PRINT:
+            case Tag.READ:
+            case Tag.COND:
+            case Tag.WHILE:
+            case '{':
+            int lnext_prog = code.newLabel();
+            statlist(lnext_prog);
+            code.emitLabel(lnext_prog);
+            match(Tag.EOF);
+            try {
+                code.toJasmin();
+            }
+            catch(java.io.IOException e) {
+                System.out.println("IO error\n");
+            };
+            default:
+                error("syntax error");
+                break;
         }
-        catch(java.io.IOException e) {
-        	System.out.println("IO error\n");
-        };
-	// ... completare ...
     }
 
     public void stat( /* completare */ ) {

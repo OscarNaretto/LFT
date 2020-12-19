@@ -37,6 +37,9 @@ public class Parser {
                 statlist();
                 match(Tag.EOF);
                 break;
+            default:
+                error("syntax error");
+                break;
         }
     }
 
@@ -51,6 +54,9 @@ public class Parser {
                 stat();
                 statlistp();
                 break;
+            default:
+                error("syntax error");
+                break;
         }
     }
 
@@ -62,6 +68,9 @@ public class Parser {
                 statlistp();
                 break;
             case Tag.EOF:
+                break;
+            default:
+                error("syntax error");
                 break;
         }
     }
@@ -103,6 +112,9 @@ public class Parser {
                 statlist();
                 match(Token.rpg.tag);
                 break;
+            default:
+                error("syntax error");
+                break;
         }
     }
 
@@ -112,6 +124,9 @@ public class Parser {
                 whenitem();
                 whenlistp();
                 break;
+            default:
+                error("syntax error");
+                break;
         }
     }
 
@@ -120,6 +135,9 @@ public class Parser {
             case Tag.WHEN:
                 whenitem();
                 whenlistp();
+                break;
+            default:
+                error("syntax error");
                 break;
         }
     }
@@ -135,6 +153,9 @@ public class Parser {
                 match(Tag.DO);
                 stat();
                 break;
+            default:
+                error("syntax error");
+                break;
         }
     }
 
@@ -144,6 +165,9 @@ public class Parser {
                 match(Tag.RELOP);
                 expr();
                 expr();
+                break;
+            default:
+                error("syntax error");
                 break;
         }
     }
@@ -178,6 +202,9 @@ public class Parser {
             case Tag.ID:
                 match(Tag.ID);
                 break;
+            default:
+                error("syntax error");
+                break;
         }
     }
 
@@ -191,6 +218,9 @@ public class Parser {
             case Tag.ID:
                 expr();
                 exprlistp();
+                break;
+            default:
+                error("syntax error");
                 break;
         }
     }
@@ -207,6 +237,9 @@ public class Parser {
                 exprlistp();
                 break;
             case ')':
+                break;
+            default:
+                error("syntax error");
                 break;
         }
     }
