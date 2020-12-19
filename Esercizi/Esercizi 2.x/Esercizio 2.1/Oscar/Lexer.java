@@ -21,7 +21,7 @@ public class Lexer {
             readch(br);
         }
 
-        switch (peek) {
+        switch (peek) {      //faccio uno switch sul carattere per restituire il rispettivo token
             case '!':
                 peek = ' ';  /* se viene letto un carattere, rimette peek a ' ' per il buon funzionamento dello scanner */
                 return Token.not;

@@ -57,7 +57,8 @@ public class Translator {
                     match(Tag.ID);
                     match(')');
                     code.emit(OpCode.invokestatic,0);
-                    code.emit(OpCode.istore,id_addr);   
+                    code.emit(OpCode.istore,id_addr); 
+		    // ... completare ...  
                 }
                 else
                     error("Error in grammar (stat) after read( with " + look);
