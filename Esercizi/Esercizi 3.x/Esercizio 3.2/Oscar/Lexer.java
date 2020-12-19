@@ -198,13 +198,10 @@ public class Lexer {
                     readch(br);
                 }
 
-                if (Character.isDigit(peek)){
+                
                     return new NumberTok(Integer.parseInt(Numero));
 
-                } else {
-                    System.err.println("Non puoi mettere un numero in testa");
-                    return null;
-                }
+                
             } else {
                 System.err.println("Erroneous character");
                 return null;
