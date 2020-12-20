@@ -40,7 +40,7 @@ public class Translator {
             case Tag.WHILE:
             case '{':
             statlist(next_label);
-            //code.emitLabel(next_label)
+            code.emitLabel(next_label);
             match(Tag.EOF);
             try {
                 code.toJasmin();
@@ -48,6 +48,7 @@ public class Translator {
             catch(java.io.IOException e) {
                 System.out.println("IO error\n");
             };
+            break;
             default:
                 error("syntax error");
                 break;
@@ -64,7 +65,6 @@ public class Translator {
             case '{':
                 stat(next_label);       //da finire
                 statlistp(next_label);
-                //emitlabel no? Probabilmente perché statlist è una lista di operandi
                 break;
             default:
                 error("syntax error");
@@ -88,15 +88,31 @@ public class Translator {
         //code.emitLabel(next_label); va emessa oppure no qui?
     }
 
-    public void stat(int operand) {
-        int lnext_prog = operand + 1;
+    public void stat(int next_label) {
         switch(look.tag) {
-                //da finire
-
-
-
-
-
+            case '=':
+                match(Token.assign.tag);
+                if (look.tag==Tag.ID) {
+                    int id_addr = st.lookupAddress(((Word)look).lexeme);
+                    if (id_addr==-1) {
+                        id_addr = count;
+                        st.insert(((Word)look).lexeme,count++);
+                    }                    
+                    match(Tag.ID);
+                    expr();
+                    code.emit(OpCode.istore, id_addr);
+                } else {
+                    error("Error in grammar (stat) after read( with " + look);
+                }
+                break;
+            
+            case Tag.PRINT:
+                match(Tag.PRINT);
+				match(Token.lpt.tag);
+				exprlist(/*codice??*/);
+				code.emit(OpCode.invokestatic,1);
+				match(Token.rpt.tag);
+                break;
 
             case Tag.READ:
                 match(Tag.READ);
@@ -115,102 +131,165 @@ public class Translator {
                     error("Error in grammar (stat) after read( with " + look);
                 }
                 break;
+
+            case Tag.COND:
+                match(Tag.COND);
+                int false_label_cond = code.newLabel();
+                whenlist(false_label_cond);
+                match(Tag.ELSE);
+                code.emit(OpCode.GOto, next_label); //da confermare
+                code.emitLabel(false_label_cond);
+                stat(next_label);
+                break;
+
+
+
+
+                //da continuare
+
+
+            case Tag.WHILE:
+                match(Tag.WHILE);
+                match(Token.lpt.tag);
+                bexpr();
+                match(Token.rpt.tag);
+                stat();
+                break;
+            case '{':
+                match(Token.lpg.tag);
+                statlist();
+                match(Token.rpg.tag);
+                break;
+
+
+
         }
-        code.emitLabel(lnext_prog);
      }
 
-     private void whenlist(int operand) {
-        int lnext_prog = operand + 1;
+    private void whenlist(int false_label_cond) {
         switch(look.tag){
             case Tag.WHEN:
-                whenitem(lnext_prog);       //da finire
-                whenlistp(lnext_prog);
+                whenitem(false_label_cond);       
+                whenlistp(false_label_cond);
                 break;
             default:
                 error("syntax error");
                 break;
         }
-        code.emitLabel(lnext_prog);
     }
 
-    private void whenlistp(int operand) {
-        int lnext_prog = operand + 1;
+    private void whenlistp(int false_label_cond) {
         switch(look.tag){
             case Tag.WHEN:
-                whenitem(lnext_prog);           //da finire
-                whenlistp(lnext_prog);
+                whenitem(false_label_cond);           
+                whenlistp(false_label_cond);
                 break;
+            case Tag.ELSE: break;
             default:
                 error("syntax error");
                 break;
         }
-        code.emitLabel(lnext_prog);
     }
 
-    private void whenitem(int operand) {
-        int lnext_prog = operand + 1;
+    private void whenitem(int false_label_cond) {
         switch(look.tag){
             case Tag.WHEN:
-                match(Tag.WHEN);            //da finire
+                int true_label_cond = code.newLabel();
+                match(Tag.WHEN);            
                 match(Token.lpt.tag);
-                bexpr(lnext_prog);
+                bexpr(true_label_cond, false_label_cond);
                 match(Token.rpt.tag);
                 match(Tag.DO);
-                stat(lnext_prog);
+                code.emitLabel(true_label_cond);
+                stat(true_label_cond);
                 break;
             default:
                 error("syntax error");
                 break;
         }
-        code.emitLabel(lnext_prog);
     }
 
-    private void bexpr(int operand) {
-        int lnext_prog = operand + 1;
-        switch(look.tag){
-            case Tag.RELOP:
-                match(Tag.RELOP);   //da finire
+    private void bexpr(int true_label_cond, int false_label_cond) {
+        switch(((Word)look).lexeme){
+
+            case "<":
+                match(Tag.RELOP);   
                 expr();
                 expr();
+                code.emit(OpCode.if_icmplt, true_label_cond);
+			    code.emit(OpCode.GOto, false_label_cond);
+                break;
 
-                //code.emit(OpCode.if_icmpeq,ltrue);    da aggiustare per label su RELOP
-			    //code.emit(OpCode.GOto,lfalse);
+            case ">":
+                match(Tag.RELOP);   
+                expr();
+                expr();
+                code.emit(OpCode.if_icmpgt, true_label_cond);
+			    code.emit(OpCode.GOto, false_label_cond);
+                break;
+            case "==":
+                match(Tag.RELOP);   
+                expr();
+                expr();
+                code.emit(OpCode.if_icmpeq, true_label_cond);
+			    code.emit(OpCode.GOto, false_label_cond);
+                break;
 
+            case "<=":
+                match(Tag.RELOP);   
+                expr();
+                expr();
+                code.emit(OpCode.if_icmple, true_label_cond);
+			    code.emit(OpCode.GOto, false_label_cond);
+                break;
 
+            case "<>":
+                match(Tag.RELOP);   
+                expr();
+                expr();
+                code.emit(OpCode.if_icmpne, true_label_cond);
+			    code.emit(OpCode.GOto, false_label_cond);
+                break;
+
+            case ">=":
+                match(Tag.RELOP);
+                expr();
+                expr();
+                code.emit(OpCode.if_icmpge, true_label_cond);
+			    code.emit(OpCode.GOto, false_label_cond);
                 break;
             default:
                 error("syntax error");
                 break;
         }
-        code.emitLabel(lnext_prog);
     }
 
-    private void expr(int operand) {
+    private void expr() {
         switch(look.tag) {
             case '+':
                 match(Token.plus.tag);
                 match(Token.lpt.tag);
-                exprlist(lnext_prog);
+                exprlist();
                 code.emit(OpCode.iadd);
                 match(Token.rpt.tag);
                 break;
             case '-':
                 match('-');
-                expr(lnext_prog);
-                expr(lnext_prog);
+                expr();
+                expr();
                 code.emit(OpCode.isub);
                 break;
             case '*':
                 match(Token.mult.tag);
                 match(Token.lpt.tag);
-                exprlist(lnext_prog);
+                exprlist();
                 code.emit(OpCode.imul);
                 match(Token.rpt.tag);
                 break;
             case '/':
                 match(Token.div.tag);
-                expr(lnext_prog);
-                expr(lnext_prog);
+                expr();
+                expr();
                 code.emit(OpCode.idiv);
                 break;
             case Tag.NUM:
@@ -232,12 +311,10 @@ public class Translator {
                 error("syntax error");
                 break;
         }
-        code.emitLabel(lnext_prog);
     }
     
 
-    private void exprlist(int operand) {
-        int lnext_prog = operand + 1;
+    private void exprlist() {
         switch(look.tag){
             case '+':
             case '-':
@@ -251,8 +328,8 @@ public class Translator {
                         id_addr = count;
                         st.insert(((Word)look).lexeme,count++);
                     }                    
-                    expr(lnext_prog);
-                    exprlistp(lnext_prog);  //da finire
+                    expr();
+                    exprlistp();  //da finire
                 } else {
                     error("Error in grammar (stat) after read( with " + look);
                 }
@@ -261,11 +338,9 @@ public class Translator {
                 error("syntax error");
                 break;
         }
-        code.emitLabel(lnext_prog);
     }
 
-    private void exprlistp(int operand) {
-        int lnext_prog = operand + 1;
+    private void exprlistp() {
         switch(look.tag){
             case '+':
             case '-':
@@ -279,8 +354,8 @@ public class Translator {
                         id_addr = count;
                         st.insert(((Word)look).lexeme,count++);
                     }                    
-                    expr(lnext_prog);
-                    exprlistp(lnext_prog);  //da finire
+                    expr();
+                    exprlistp();  //da finire
                 } else {
                     error("Error in grammar (stat) after read( with " + look);
                 }
@@ -291,7 +366,6 @@ public class Translator {
                 error("syntax error");
                 break;
         }
-        code.emitLabel(lnext_prog);
     }
 }
 

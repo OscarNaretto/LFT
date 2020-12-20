@@ -158,20 +158,22 @@ public class Parser {
     private void whenlist(){
         switch(look.tag){
             case Tag.WHEN:
-            whenlistp();
+            whenitem();
             whenlistp();
             break;
         }
     }
 
-    //WL --> WIWL' --- Guida = when
-    //WL --> 3 --- Guida = when
+    //WL' --> WIWL' --- Guida = when
+    //WL' --> 3 --- Guida = when
     private void whenlistp(){
         switch(look.tag){
             case Tag.WHEN:
-            whenlistp();
+            whenitem();
             whenlistp();
             break;
+        case Tag.ELSE: break;
+
         }
     }
 
