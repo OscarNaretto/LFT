@@ -31,7 +31,6 @@ public class Translator {
     }
 
     public void prog() {  
-        int next_label = code.newLabel();
         switch(look.tag){
             case '=':
             case Tag.PRINT:
@@ -39,6 +38,7 @@ public class Translator {
             case Tag.COND:
             case Tag.WHILE:
             case '{':
+            int next_label = code.newLabel();
             statlist(next_label);
             code.emitLabel(next_label);
             match(Tag.EOF);
@@ -63,7 +63,7 @@ public class Translator {
             case Tag.COND:
             case Tag.WHILE:
             case '{':
-                stat(next_label);       //da finire
+                stat(next_label);       
                 statlistp(next_label);
                 break;
             default:
@@ -76,7 +76,7 @@ public class Translator {
         switch (look.tag) {
             case ';':
                 match(Token.semicolon.tag);
-                stat(next_label);           //da finire
+                stat(next_label);           
                 statlistp(next_label);
                 break;
             case Tag.EOF:
@@ -85,7 +85,6 @@ public class Translator {
                 error("syntax error");
                 break;
         }
-        //code.emitLabel(next_label); va emessa oppure no qui?
     }
 
     public void stat(int next_label) {
@@ -109,7 +108,7 @@ public class Translator {
             case Tag.PRINT:
                 match(Tag.PRINT);
 				match(Token.lpt.tag);
-				exprlist(/*codice??*/);
+				exprlist();
 				code.emit(OpCode.invokestatic,1);
 				match(Token.rpt.tag);
                 break;
@@ -125,7 +124,7 @@ public class Translator {
                     }                    
                     match(Tag.ID);
                     match(')');
-                    code.emit(OpCode.invokestatic,0);   //fatto
+                    code.emit(OpCode.invokestatic,0);   
                     code.emit(OpCode.istore,id_addr); 
                 } else {
                     error("Error in grammar (stat) after read( with " + look);
@@ -206,7 +205,7 @@ public class Translator {
         }
     }
 
-    private void bexpr(int true_label_cond, int false_label_cond) {     //FATTO
+    private void bexpr(int true_label_cond, int false_label_cond) {     
         switch(((Word)look).lexeme){
             case "<":
                 match(Tag.RELOP);   
@@ -363,4 +362,3 @@ public class Translator {
         }
     }
 }
-
