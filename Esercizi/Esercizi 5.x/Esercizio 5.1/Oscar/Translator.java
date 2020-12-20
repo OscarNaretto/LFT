@@ -298,7 +298,7 @@ public class Translator {
                         id_addr = count;
                         st.insert(((Word)look).lexeme,count++);
                     }                    
-                    match(Tag.ID);  //da finire  
+                    match(Tag.ID);
                 } else {
                     error("Error in grammar (stat) after read( with " + look);
                 }
@@ -309,7 +309,6 @@ public class Translator {
         }
     }
     
-
     private void exprlist() {
         switch(look.tag){
             case '+':
@@ -325,7 +324,7 @@ public class Translator {
                         st.insert(((Word)look).lexeme,count++);
                     }                    
                     expr();
-                    exprlistp();  //da finire
+                    exprlistp();
                 } else {
                     error("Error in grammar (stat) after read( with " + look);
                 }
@@ -351,7 +350,7 @@ public class Translator {
                         st.insert(((Word)look).lexeme,count++);
                     }                    
                     expr();
-                    exprlistp();  //da finire
+                    exprlistp();
                 } else {
                     error("Error in grammar (stat) after read( with " + look);
                 }
