@@ -31,7 +31,7 @@ public class Translator {
     }
 
     public void prog() {  
-        int lnext_prog = code.newLabel();
+        int next_label = code.newLabel();
         switch(look.tag){
             case '=':
             case Tag.PRINT:
@@ -39,7 +39,8 @@ public class Translator {
             case Tag.COND:
             case Tag.WHILE:
             case '{':
-            statlist(lnext_prog);
+            statlist(next_label);
+            //code.emitLabel(next_label)
             match(Tag.EOF);
             try {
                 code.toJasmin();
@@ -51,11 +52,9 @@ public class Translator {
                 error("syntax error");
                 break;
         }
-        code.emitLabel(lnext_prog);
     }
 
-    private void statlist(int operand) {
-        int lnext_prog = operand + 1;
+    private void statlist(int next_label) {
         switch(look.tag){
             case '=':
             case Tag.PRINT:
@@ -63,23 +62,22 @@ public class Translator {
             case Tag.COND:
             case Tag.WHILE:
             case '{':
-                stat(lnext_prog);       //da finire
-                statlistp(lnext_prog);
+                stat(next_label);       //da finire
+                statlistp(next_label);
+                //emitlabel no? Probabilmente perché statlist è una lista di operandi
                 break;
             default:
                 error("syntax error");
                 break;
         }
-        code.emitLabel(lnext_prog);
     }
 
-    private void statlistp(int operand) {
-        int lnext_prog = operand + 1;
+    private void statlistp(int next_label) {
         switch (look.tag) {
             case ';':
                 match(Token.semicolon.tag);
-                stat(lnext_prog);           //da finire
-                statlistp(lnext_prog);
+                stat(next_label);           //da finire
+                statlistp(next_label);
                 break;
             case Tag.EOF:
                 break;
@@ -87,7 +85,7 @@ public class Translator {
                 error("syntax error");
                 break;
         }
-        code.emitLabel(lnext_prog);
+        //code.emitLabel(next_label); va emessa oppure no qui?
     }
 
     public void stat(int operand) {
@@ -172,8 +170,13 @@ public class Translator {
         switch(look.tag){
             case Tag.RELOP:
                 match(Tag.RELOP);   //da finire
-                expr(lnext_prog);
-                expr(lnext_prog);
+                expr();
+                expr();
+
+                //code.emit(OpCode.if_icmpeq,ltrue);    da aggiustare per label su RELOP
+			    //code.emit(OpCode.GOto,lfalse);
+
+
                 break;
             default:
                 error("syntax error");
@@ -183,7 +186,6 @@ public class Translator {
     }
 
     private void expr(int operand) {
-        int lnext_prog = operand + 1;
         switch(look.tag) {
             case '+':
                 match(Token.plus.tag);
