@@ -137,32 +137,29 @@ public class Translator {
                 int false_label_cond = code.newLabel();
                 whenlist(false_label_cond);
                 match(Tag.ELSE);
-                code.emit(OpCode.GOto, next_label); //da confermare
+                code.emit(OpCode.GOto, next_label);
                 code.emitLabel(false_label_cond);
                 stat(next_label);
                 break;
 
-
-
-
-                //da continuare
-
-
             case Tag.WHILE:
                 match(Tag.WHILE);
                 match(Token.lpt.tag);
-                bexpr();
+                int loop_label_while = code.newLabel();
+                int continue_label_while = code.newLabel();
+                code.emitLabel(loop_label_while);
+                bexpr(continue_label_while, next_label);
                 match(Token.rpt.tag);
-                stat();
+                stat(loop_label_while);
+                code.emit(OpCode.GOto, loop_label_while);
+                code.emitLabel(next_label);
                 break;
+
             case '{':
                 match(Token.lpg.tag);
-                statlist();
+                statlist(next_label);
                 match(Token.rpg.tag);
                 break;
-
-
-
         }
      }
 
@@ -209,9 +206,8 @@ public class Translator {
         }
     }
 
-    private void bexpr(int true_label_cond, int false_label_cond) {
+    private void bexpr(int true_label_cond, int false_label_cond) {     //FATTO
         switch(((Word)look).lexeme){
-
             case "<":
                 match(Tag.RELOP);   
                 expr();
