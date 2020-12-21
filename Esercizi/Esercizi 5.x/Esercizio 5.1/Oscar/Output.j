@@ -48,9 +48,11 @@ L1:
 L2:
 L4:
  iload 0
+ ldc 0
  if_icmpgt L5
  goto L0
  iload 0
+ ldc 1
  isub 
  istore 0
  goto L4

@@ -127,11 +127,11 @@ public class Translator {
                 int false_label_cond = code.newLabel();
                 next_label = code.newLabel();
                 whenlist(false_label_cond);
-                code.emit(OpCode.GOto, next_label);     //label errata: viene duplicata e non serve
+                code.emit(OpCode.GOto, next_label);     //label duplicata e non serve
                 match(Tag.ELSE);
                 code.emitLabel(false_label_cond);
                 stat(next_label);
-                code.emitLabel(next_label);     //label errata: viene duplicata e non serve
+                code.emitLabel(next_label);             //label duplicata e non serve
                 break;
 
             case Tag.WHILE:
@@ -269,6 +269,7 @@ public class Translator {
                 code.emit(OpCode.idiv);
                 break;
             case Tag.NUM:
+                code.emit(OpCode.ldc, ((NumberTok)look).number);
                 match(Tag.NUM);
                 break;
             case Tag.ID:
