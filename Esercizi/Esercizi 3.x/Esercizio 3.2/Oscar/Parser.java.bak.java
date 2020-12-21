@@ -29,28 +29,16 @@ public class Parser {
     public void prog() {
         switch(look.tag){
             case '=':
-                statlist();
-                match(Tag.EOF);
-                break;
             case Tag.PRINT:
-                statlist();
-                match(Tag.EOF);
-                break;
             case Tag.READ:
-                statlist();
-                match(Tag.EOF);
-                break;
             case Tag.COND:
-                statlist();
-                match(Tag.EOF);
-                break;
             case Tag.WHILE:
-                statlist();
-                match(Tag.EOF);
-                break;
             case '{':
                 statlist();
                 match(Tag.EOF);
+                break;
+            default:
+                error("syntax error");
                 break;
         }
     }
@@ -58,28 +46,16 @@ public class Parser {
     private void statlist() {
         switch(look.tag){
             case '=':
-                stat();
-                statlistp();;
-                break;
             case Tag.PRINT:
-                stat();
-                statlistp();
-                break;
             case Tag.READ:
-                stat();
-                statlistp();
-                break;
             case Tag.COND:
-                stat();
-                statlistp();
-                break;
             case Tag.WHILE:
-                stat();
-                statlistp();
-                break;
             case '{':
                 stat();
                 statlistp();
+                break;
+            default:
+                error("syntax error");
                 break;
         }
     }
@@ -92,6 +68,9 @@ public class Parser {
                 statlistp();
                 break;
             case Tag.EOF:
+                break;
+            default:
+                error("syntax error");
                 break;
         }
     }
@@ -133,6 +112,10 @@ public class Parser {
                 statlist();
                 match(Token.rpg.tag);
                 break;
+            case Tag.EOF: break;
+            default:
+                error("syntax error");
+                break;
         }
     }
 
@@ -141,6 +124,9 @@ public class Parser {
             case Tag.WHEN:
                 whenitem();
                 whenlistp();
+                break;
+            default:
+                error("syntax error");
                 break;
         }
     }
@@ -152,6 +138,9 @@ public class Parser {
                 whenlistp();
                 break;
             case Tag.ELSE: break;
+            default:
+                error("syntax error");
+                break;
         }
     }
     
@@ -166,6 +155,9 @@ public class Parser {
                 match(Tag.DO);
                 stat();
                 break;
+            default:
+                error("syntax error");
+                break;
         }
     }
 
@@ -175,6 +167,9 @@ public class Parser {
                 match(Tag.RELOP);
                 expr();
                 expr();
+                break;
+            default:
+                error("syntax error");
                 break;
         }
     }
@@ -209,34 +204,25 @@ public class Parser {
             case Tag.ID:
                 match(Tag.ID);
                 break;
+            default:
+                error("syntax error");
+                break;
         }
     }
 
     private void exprlist() {
         switch(look.tag){
             case '+':
-                expr();
-                exprlistp();
-                break;
             case '-':
-                expr();
-                exprlistp();
-                break;
             case '*':
-                expr();
-                exprlistp();
-                break;
             case '/':
-                expr();
-                exprlistp();
-                break;
             case Tag.NUM:
-                expr();
-                exprlistp();
-                break;
             case Tag.ID:
                 expr();
                 exprlistp();
+                break;
+            default:
+                error("syntax error");
                 break;
         }
     }
@@ -244,37 +230,25 @@ public class Parser {
     private void exprlistp() {
         switch(look.tag){
             case '+':
-                expr();
-                exprlistp();
-                break;
             case '-':
-                expr();
-                exprlistp();
-                break;
             case '*':
-                expr();
-                exprlistp();
-                break;
             case '/':
-                expr();
-                exprlistp();
-                break;
             case Tag.NUM:
-                expr();
-                exprlistp();
-                break;
             case Tag.ID:
                 expr();
                 exprlistp();
                 break;
             case ')':
                 break;
+            default:
+                error("syntax error");
+                break;
         }
     }
 		
     public static void main(String[] args) {
         Lexer lex = new Lexer();
-        String path = "esempio_semplice.lft.txt"; // il percorso del file da leggere
+        String path = "testo.txt"; // il percorso del file da leggere
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             Parser parser = new Parser(lex, br);
