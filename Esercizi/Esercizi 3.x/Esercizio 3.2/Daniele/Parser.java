@@ -151,6 +151,8 @@ public class Parser {
                 whenitem();
                 whenlistp();
                 break;
+			case Tag.ELSE: 
+				break;	
         }
     }
     
