@@ -215,25 +215,10 @@ public class Parser {
     private void exprlist() {
         switch(look.tag){
             case '+':
-                expr();
-                exprlistp();
-                break;
             case '-':
-                expr();
-                exprlistp();
-                break;
             case '*':
-                expr();
-                exprlistp();
-                break;
             case '/':
-                expr();
-                exprlistp();
-                break;
             case Tag.NUM:
-                expr();
-                exprlistp();
-                break;
             case Tag.ID:
                 expr();
                 exprlistp();
@@ -244,25 +229,10 @@ public class Parser {
     private void exprlistp() {
         switch(look.tag){
             case '+':
-                expr();
-                exprlistp();
-                break;
             case '-':
-                expr();
-                exprlistp();
-                break;
             case '*':
-                expr();
-                exprlistp();
-                break;
             case '/':
-                expr();
-                exprlistp();
-                break;
             case Tag.NUM:
-                expr();
-                exprlistp();
-                break;
             case Tag.ID:
                 expr();
                 exprlistp();
@@ -274,7 +244,7 @@ public class Parser {
 		
     public static void main(String[] args) {
         Lexer lex = new Lexer();
-        String path = "esempio_semplice.lft.txt"; // il percorso del file da leggere
+        String path = "testo.txt"; // il percorso del file da leggere
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             Parser parser = new Parser(lex, br);

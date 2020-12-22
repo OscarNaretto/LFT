@@ -115,8 +115,8 @@ public class Translator {
                     }                    
                     match(Tag.ID);
                     match(')');
+                    code.emit(OpCode.iload,id_addr); 
                     code.emit(OpCode.invokestatic,0);   
-                    code.emit(OpCode.istore,id_addr); 
                 } else {
                     error("Error in grammar (stat) after read( with " + look);
                 }
@@ -137,14 +137,14 @@ public class Translator {
             case Tag.WHILE:
                 match(Tag.WHILE);
                 match(Token.lpt.tag);
+                int loop_label_while = code.newLabel();
                 int continue_label_while = code.newLabel();
-                int end_label_while = code.newLabel();
-                code.emitLabel(end_label_while);
+                code.emitLabel(loop_label_while);
                 bexpr(continue_label_while, next_label);
                 match(Token.rpt.tag);
-                code.emitLabel(continue_label_while);
-                stat(next_label);
-                code.emit(OpCode.GOto, end_label_while);
+                stat(loop_label_while);
+                code.emit(OpCode.GOto, loop_label_while);
+                code.emitLabel(next_label);
                 break;
 
             case '{':
@@ -286,9 +286,6 @@ public class Translator {
             case '*':
             case '/':
             case Tag.NUM:
-                expr();
-                exprlistp();
-                break;
             case Tag.ID:
                 if (look.tag==Tag.ID) {
                     int id_addr = st.lookupAddress(((Word)look).lexeme);
@@ -312,9 +309,6 @@ public class Translator {
             case '*':
             case '/':
             case Tag.NUM:
-                expr();
-                exprlistp();
-                break;
             case Tag.ID:
                 if (look.tag==Tag.ID) {
                     int id_addr = st.lookupAddress(((Word)look).lexeme);
