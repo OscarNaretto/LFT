@@ -1,7 +1,4 @@
 import java.io.*;
-import java.text.BreakIterator;
-
-import jdk.nashorn.internal.parser.Token;
 
 public class Parser {
     private Lexer lex;
@@ -30,8 +27,8 @@ public class Parser {
     }
 
     //P--> SL EOF --- Guida = =,print,read,cond,while,{
-    public void prog(){
-        switch (look.tag) {
+    public void prog() {
+        switch(look.tag){
             case '=':
                 statlist();
                 match(Tag.EOF);
@@ -39,11 +36,11 @@ public class Parser {
             case Tag.PRINT:
                 statlist();
                 match(Tag.EOF);
-                break; 
+                break;
             case Tag.READ:
                 statlist();
                 match(Tag.EOF);
-                 break;   
+                break;
             case Tag.COND:
                 statlist();
                 match(Tag.EOF);
@@ -55,19 +52,19 @@ public class Parser {
             case '{':
                 statlist();
                 match(Tag.EOF);
-            break;
+                break;
         }
     }
 
     //SL-->S ST --- Guida = =,print,read,cond,while,{
-    private void statlist(){
+    private void statlist() {
         switch(look.tag){
             case '=':
                 stat();
-                statlistp();
+                statlistp();;
                 break;
             case Tag.PRINT:
-                stat();;
+                stat();
                 statlistp();
                 break;
             case Tag.READ:
@@ -87,19 +84,18 @@ public class Parser {
                 statlistp();
                 break;
         }
-
     }
-
     //SL'--> ;S SL' --- Guida = ;
     //SL'--> 3 --- Guida = EOF
-    private void statlistp(){
-        switch(look.tag){
-            case '=':
+    private void statlistp() {
+        switch (look.tag) {
+            case ';':
                 match(Token.semicolon.tag);
                 stat();
                 statlistp();
                 break;
-            case Tag.EOF: break;
+            case Tag.EOF:
+                break;
         }
     }
 
@@ -109,13 +105,12 @@ public class Parser {
     //S--> cond(WL)else(S) --- Guida = cond
     //S--> while(B)S --- Guida = while
     //S--> {SL} --- Guida = {
-    private void stat(){
+    private void stat() {
         switch(look.tag){
             case '=':
+                match(Token.assign.tag);
                 match(Tag.ID);
-                match(Token.lpt.tag);
                 expr();
-                match(Token.rpt.tag);
                 break;
             case Tag.PRINT:
                 match(Tag.PRINT);
@@ -131,12 +126,9 @@ public class Parser {
                 break;
             case Tag.COND:
                 match(Tag.COND);
-                match(Token.lpt.tag);
                 whenlist();
                 match(Tag.ELSE);
-                match(Token.lpt.tag);
                 stat();
-                match(Token.rpt.tag);
                 break;
             case Tag.WHILE:
                 match(Tag.WHILE);
@@ -151,48 +143,44 @@ public class Parser {
                 match(Token.rpg.tag);
                 break;
         }
-
     }
-
     //WL --> WIWL' --- Guida = when
-    private void whenlist(){
+    private void whenlist() {
         switch(look.tag){
             case Tag.WHEN:
-            whenitem();
-            whenlistp();
-            break;
+                whenitem();
+                whenlistp();
+                break;
         }
     }
-
-    //WL' --> WIWL' --- Guida = when
-    //WL' --> 3 --- Guida = when
-    private void whenlistp(){
+    //WL --> WIWL' --- Guida = when
+    //WL --> 3 --- Guida = when
+    private void whenlistp() {
         switch(look.tag){
             case Tag.WHEN:
-            whenitem();
-            whenlistp();
-            break;
-        case Tag.ELSE: break;
-
+                whenitem();
+                whenlistp();
+                break;
+			case Tag.ELSE: 
+				break;	
         }
     }
-
+    
     //WI --> when(B)doS --- Guida = when 
-    private void whenitem(){
+    private void whenitem() {
         switch(look.tag){
             case Tag.WHEN:
-            match(Tag.WHEN);
-            match(Token.lpt.tag);
-            bexpr();
-            match(Token.rpt.tag);
-            match(Tag.DO);
-            stat();
-            break;
+                match(Tag.WHEN);
+                match(Token.lpt.tag);
+                bexpr();
+                match(Token.rpt.tag);
+                match(Tag.DO);
+                stat();
+                break;
         }
     }
-
     //B -- > RELOP EE --- Guida = RELOP
-    private void bexpr(){
+    private void bexpr() {
         switch(look.tag){
             case Tag.RELOP:
                 match(Tag.RELOP);
@@ -200,16 +188,14 @@ public class Parser {
                 expr();
                 break;
         }
-
     }
-    
     //E --> +(EL) --- Guida = +
     //E --> -EE --- Guida = -
     //E --> *(EL) --- Guida = *
     //E --> /EE --- Guida = /
     //E --> NUM --- Guida = NUM
     //E --> ID --- Guida = ID
-    private void expr(){
+    private void expr() {
         switch(look.tag){
             case '+':
                 match(Token.plus.tag);
@@ -240,75 +226,69 @@ public class Parser {
                 match(Tag.ID);
                 break;
         }
-
     }
 
-    //EL -->  EEL' --- Guida = =,print,read,cond,while,{
-    private void exprlist(){
+    //EL -->  EEL' --- Guida = +,-,*,/,NUM,ID
+    private void exprlist() {
         switch(look.tag){
-        case '=':
-            expr();
-            exprlistp();
-            break;
-        case Tag.PRINT:
-            expr();
-            exprlistp();
-            break;
-        case Tag.READ:
-            expr();
-            exprlistp();
-            break;
-        case Tag.COND:
-            expr();
-            exprlistp();
-            break;
-        case Tag.WHILE:
-            expr();
-            exprlistp();
-            break;
-        case '{':
-            expr();
-            exprlistp();
-            break;
+            case '+':
+                expr();
+                exprlistp();
+                break;
+            case '-':
+                expr();
+                exprlistp();
+                break;
+            case '*':
+                expr();
+                exprlistp();
+                break;
+            case '/':
+                expr();
+                exprlistp();
+                break;
+            case Tag.NUM:
+                expr();
+                exprlistp();
+                break;
+            case Tag.ID:
+                expr();
+                exprlistp();
+                break;
         }
-
     }
-
-
-    //EL' -->  EEL' --- Guida = =,print,read,cond,while,{
+    //EL' -->  EEL' --- Guida = +,-,*,/,NUM,ID
     //EL' --> 3 --- Guida = )
-    private void exprlistp(){
+    private void exprlistp() {
         switch(look.tag){
-            case '=':
+            case '+':
                 expr();
                 exprlistp();
                 break;
-            case Tag.PRINT:
+            case '-':
                 expr();
                 exprlistp();
                 break;
-            case Tag.READ:
+            case '*':
                 expr();
                 exprlistp();
                 break;
-            case Tag.COND:
+            case '/':
                 expr();
                 exprlistp();
                 break;
-            case Tag.WHILE:
+            case Tag.NUM:
                 expr();
                 exprlistp();
                 break;
-            case '{':
+            case Tag.ID:
                 expr();
                 exprlistp();
                 break;
-            case ')': break;
-            }
-
-    
+            case ')':
+                break;
+        }
     }
-
 		
     public static void main(String[] args) {
         Lexer lex = new Lexer();
@@ -316,7 +296,7 @@ public class Parser {
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             Parser parser = new Parser(lex, br);
-            parser.start();
+            parser.prog();
             System.out.println("Input OK");
             br.close();
         } catch (IOException e) {e.printStackTrace();}
