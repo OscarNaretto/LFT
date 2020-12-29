@@ -244,7 +244,7 @@ public class Translator {
         switch(look.tag) {
             case '+':
                 match(Token.plus.tag);
-                match(Token.lpt.tag);
+                match(Token.lpt.tag);       //sbagliato
                 exprlist();
                 code.emit(OpCode.iadd);
                 match(Token.rpt.tag);
@@ -257,7 +257,7 @@ public class Translator {
                 break;
             case '*':
                 match(Token.mult.tag);
-                match(Token.lpt.tag);
+                match(Token.lpt.tag);       //sbagliato
                 exprlist();
                 code.emit(OpCode.imul);
                 match(Token.rpt.tag);
@@ -285,7 +285,7 @@ public class Translator {
             case '-':
             case '*':
             case '/':
-            case Tag.NUM:
+            case Tag.NUM:           //qua calcoli di somma e moltiplicazione da implementare
                 expr();
                 exprlistp();
                 break;
