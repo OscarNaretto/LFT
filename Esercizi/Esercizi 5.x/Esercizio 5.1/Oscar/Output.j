@@ -39,7 +39,6 @@
  ldc 3
  ldc 4
  iadd 
- iadd 
  invokestatic Output/print(I)V
  iload 0
  iload 1
