@@ -99,9 +99,9 @@ public class Translator {
             case Tag.PRINT:
                 match(Tag.PRINT);
 				match(Token.lpt.tag);
-				exprlist();
-				code.emit(OpCode.invokestatic,1);
+				exprlist(Tag.PRINT);
 				match(Token.rpt.tag);
+                code.emit(OpCode.invokestatic,1);
                 break;
 
             case Tag.READ:
@@ -127,11 +127,11 @@ public class Translator {
                 int false_label_cond = code.newLabel();
                 next_label = code.newLabel();
                 whenlist(false_label_cond);
-                code.emit(OpCode.GOto, next_label);     //label duplicata e non serve
+                code.emit(OpCode.GOto, next_label);     
                 match(Tag.ELSE);
                 code.emitLabel(false_label_cond);
                 stat(next_label);
-                code.emitLabel(next_label);             //label duplicata e non serve
+                code.emitLabel(next_label);             
                 break;
 
             case Tag.WHILE:
@@ -244,9 +244,8 @@ public class Translator {
         switch(look.tag) {
             case '+':
                 match(Token.plus.tag);
-                match(Token.lpt.tag);       //sbagliato
-                exprlist();
-                code.emit(OpCode.iadd);
+                match(Token.lpt.tag);       
+                exprlist('+');
                 match(Token.rpt.tag);
                 break;
             case '-':
@@ -257,9 +256,8 @@ public class Translator {
                 break;
             case '*':
                 match(Token.mult.tag);
-                match(Token.lpt.tag);       //sbagliato
-                exprlist();
-                code.emit(OpCode.imul);
+                match(Token.lpt.tag);       
+                exprlist('*');
                 match(Token.rpt.tag);
                 break;
             case '/':
@@ -279,15 +277,24 @@ public class Translator {
         }
     }
     
-    private void exprlist() {
-        switch(look.tag){
-            case '+':
+    private void exprlist(int operation) {  //exprlist prende ad argomento l'operazione da eseguire
+        switch(look.tag){                   //questo serve infatti a tenere l'operazione in memoria 
+            case '+':                       //nel caso di somme o moltiplicazioni al fine di poterle concatenare
             case '-':
             case '*':
             case '/':
-            case Tag.NUM:           //qua calcoli di somma e moltiplicazione da implementare
+            case Tag.NUM:           
+                if (operation == '+'){
+                    expr();
+                    exprlistp(operation);
+                    code.emit(OpCode.iadd);
+                } else if (operation == '*'){
+                    expr();
+                    exprlistp(operation);
+                    code.emit(OpCode.imul);
+                }
                 expr();
-                exprlistp();
+                exprlistp(operation);
                 break;
             case Tag.ID:
                 if (look.tag==Tag.ID) {
@@ -297,7 +304,7 @@ public class Translator {
                         st.insert(((Word)look).lexeme,count++);
                     }                    
                     expr();
-                    exprlistp();
+                    exprlistp(operation);
                 } else {
                     error("Error in grammar (stat) after read( with " + look);
                 }
@@ -305,15 +312,24 @@ public class Translator {
         }
     }
 
-    private void exprlistp() {
+    private void exprlistp(int operation) {
         switch(look.tag){
             case '+':
             case '-':
             case '*':
             case '/':
             case Tag.NUM:
+                if (operation == '+'){
+                    expr();
+                    exprlistp(operation);
+                    code.emit(OpCode.iadd);
+                } else if (operation == '*'){
+                    expr();
+                    exprlistp(operation);
+                    code.emit(OpCode.imul);
+                }
                 expr();
-                exprlistp();
+                exprlistp(operation);
                 break;
             case Tag.ID:
                 if (look.tag==Tag.ID) {
@@ -323,7 +339,7 @@ public class Translator {
                         st.insert(((Word)look).lexeme,count++);
                     }                    
                     expr();
-                    exprlistp();
+                    exprlistp(operation);
                 } else {
                     error("Error in grammar (stat) after read( with " + look);
                 }
