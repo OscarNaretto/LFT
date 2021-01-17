@@ -1,0 +1,13 @@
+read(x);
+read(y);
+while (< y 0) {
+	= y - y 1;
+	print(y);
+}
+print(1+(2 3 4));
+cond
+	when (> x y) do print(x) else print(y);
+while (> x 0) {
+	= x - x 1;
+	print(x);
+}

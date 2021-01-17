@@ -125,8 +125,8 @@ public class Translator {
             case Tag.COND:
                 match(Tag.COND);
                 int false_label_cond = code.newLabel();
-                whenlist(false_label_cond);
                 next_label = code.newLabel();
+                whenlist(false_label_cond);
                 code.emit(OpCode.GOto, next_label);     
                 match(Tag.ELSE);
                 code.emitLabel(false_label_cond);
@@ -134,17 +134,17 @@ public class Translator {
                 code.emitLabel(next_label);             
                 break;
 
-            case Tag.WHILE: 
+            case Tag.WHILE:
                 match(Tag.WHILE);
                 match(Token.lpt.tag);
-                int loop_label_while = code.newLabel();         //etichetta del loop
-                int continue_label_while = code.newLabel();     //etichetta per entrare nel corpo del while
-                code.emitLabel(loop_label_while);
+                int continue_label_while = code.newLabel();
+                int end_label_while = code.newLabel();
+                code.emitLabel(end_label_while);
                 bexpr(continue_label_while, next_label);
                 match(Token.rpt.tag);
                 code.emitLabel(continue_label_while);
                 stat(next_label);
-                code.emit(OpCode.GOto, loop_label_while);
+                code.emit(OpCode.GOto, end_label_while);
                 break;
 
             case '{':
@@ -183,7 +183,7 @@ public class Translator {
                 bexpr(true_label_cond, false_label_cond);
                 match(Token.rpt.tag);
                 match(Tag.DO);
-                code.emitLabel(true_label_cond);            //etichetta per espressione true
+                code.emitLabel(true_label_cond);
                 stat(true_label_cond);
                 break;
         }

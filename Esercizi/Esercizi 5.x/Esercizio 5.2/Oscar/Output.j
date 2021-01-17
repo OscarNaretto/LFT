@@ -44,29 +44,29 @@
  invokestatic Output/print(I)V
  iload 0
  iload 1
- if_icmpgt L2
+ if_icmpgt L3
  goto L1
-L2:
+L3:
  iload 0
  invokestatic Output/print(I)V
- goto L3
+ goto L2
 L1:
  iload 1
  invokestatic Output/print(I)V
-L3:
-L4:
+L2:
+L5:
  iload 0
  ldc 0
- if_icmpgt L5
+ if_icmpgt L4
  goto L0
-L5:
+L4:
  iload 0
  ldc 1
  isub 
  istore 0
  iload 0
  invokestatic Output/print(I)V
- goto L4
+ goto L5
 L0:
  return
 .end method
