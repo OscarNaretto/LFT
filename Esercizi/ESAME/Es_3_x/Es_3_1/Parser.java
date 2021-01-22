@@ -1,4 +1,4 @@
-/*analisi sintattica pere spressioni aritmetiche semplici,
+/*analisi sintattica per spressioni aritmetiche semplici,
 scritte in notazione infissa.*/
 
 import java.io.*;
@@ -15,7 +15,7 @@ public class Parser {
     }
 
     void move() {
-        look = lex.lexical_scan(pbr); // lettura del ??Token??
+        look = lex.lexical_scan(pbr); // lettura del Token
         System.out.println("token = " + look);
     }
 
@@ -23,7 +23,7 @@ public class Parser {
 	    throw new Error("near line " + lex.line + ": " + s);
     }
 
-    void match(int t) { // verifichiamo che il token(??suceesivo??) sia uguale al simbolo da legere 
+    void match(int t) { // verifichiamo che il token(??suceesivo??) sia uguale al parametro di questa procedura
 	    if (look.tag == t) {
 	        if (look.tag != Tag.EOF) move(); //passiamo al simbolo suceesivo in caso non fossero uguali
 	    } else error("syntax error"); 
