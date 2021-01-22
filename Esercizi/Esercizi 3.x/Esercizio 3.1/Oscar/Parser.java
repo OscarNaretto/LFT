@@ -33,6 +33,9 @@ public class Parser {
                 expr();
                 match(Tag.EOF);
                 break;
+            default:
+                error("syntax error");
+                break;
         }
     }
 
@@ -42,6 +45,9 @@ public class Parser {
             case Tag.NUM:
                 term(); 
                 exprp();
+                break;
+            default:
+                error("syntax error");
                 break;
         }
     }
@@ -60,6 +66,9 @@ public class Parser {
                 break;
             case ')': break;              //i due casi epsilon, quindi nessuna produzione rilevante
             case Tag.EOF: break;
+            default:
+                error("syntax error");
+                break;
 	    }
     }
 
@@ -69,6 +78,9 @@ public class Parser {
             case Tag.NUM:
                 fact();
                 termp();
+                break;
+            default:
+                error("syntax error");
                 break;
         }
     }
@@ -89,6 +101,9 @@ public class Parser {
             case '-':
             case ')':
             case Tag.EOF: break;
+            default:
+                error("syntax error");
+                break;
         }
     }
 
@@ -101,6 +116,9 @@ public class Parser {
                 break;
             case Tag.NUM:
                 match(Tag.NUM);
+                break;
+            default:
+                error("syntax error");
                 break;
         }
     }

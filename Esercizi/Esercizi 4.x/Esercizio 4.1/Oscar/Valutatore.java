@@ -34,12 +34,12 @@ public class Valutatore {
             case Tag.NUM:
                 expr_val = expr();            
                 match(Tag.EOF);
+                System.out.println("Il risultato atteso è: " + expr_val);
                 break;
             default:
                 error("syntax error");
                 break;
         }
-        System.out.println("Il risultato atteso è: " + expr_val);
     }
 
     private int expr() { 
@@ -74,7 +74,7 @@ public class Valutatore {
                 break;
             case ')':              //i due casi epsilon, quindi nessuna produzione rilevante
             case Tag.EOF: 
-                exprp_val = exprp_i;
+                exprp_val = exprp_i;    //il sintetizzato di E' prende quindi il valore dell'ereditato
                 break;
             default:
                 error("syntax error");
@@ -119,7 +119,6 @@ public class Valutatore {
             case Tag.EOF:             
                 termp_val = termp_i;
                 break;
-            
             default:
                 error("syntax error");
                 break;

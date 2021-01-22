@@ -38,17 +38,19 @@ public class Translator {
             case Tag.COND:
             case Tag.WHILE:
             case '{':
-            int next_label = code.newLabel();
-            statlist(next_label);
-            code.emitLabel(next_label);
-            match(Tag.EOF);
-            try {
-                code.toJasmin();
-            }
-            catch(java.io.IOException e) {
-                System.out.println("IO error\n");
-            };
-            break;
+                int next_label = code.newLabel();
+                statlist(next_label);
+                code.emitLabel(next_label);
+                match(Tag.EOF);
+                try {
+                    code.toJasmin();
+                } catch(java.io.IOException e) {
+                    System.out.println("IO error\n");
+                };
+                break;
+            default:
+                error("syntax error");
+                break;
         }
     }
 
@@ -63,6 +65,9 @@ public class Translator {
                 stat(next_label);       
                 statlistp(next_label);
                 break;
+            default:
+                error("syntax error");
+                break;
         }
     }
 
@@ -74,6 +79,10 @@ public class Translator {
                 statlistp(next_label);
                 break;
             case Tag.EOF:
+            case '}':           
+                break;
+            default:
+                error("syntax error");
                 break;
         }
     }
@@ -95,7 +104,6 @@ public class Translator {
                     error("Error in grammar (stat) after read( with " + look);
                 }
                 break;
-            
             case Tag.PRINT:
                 match(Tag.PRINT);
 				match(Token.lpt.tag);
@@ -103,7 +111,6 @@ public class Translator {
 				match(Token.rpt.tag);
                 code.emit(OpCode.invokestatic,1);
                 break;
-
             case Tag.READ:
                 match(Tag.READ);
                 match('(');
@@ -121,7 +128,6 @@ public class Translator {
                     error("Error in grammar (stat) after read( with " + look);
                 }
                 break;
-
             case Tag.COND:
                 match(Tag.COND);
                 int false_label_cond = code.newLabel();
@@ -133,7 +139,6 @@ public class Translator {
                 stat(next_label);
                 code.emitLabel(next_label);             
                 break;
-
             case Tag.WHILE: 
                 match(Tag.WHILE);
                 match(Token.lpt.tag);
@@ -146,11 +151,13 @@ public class Translator {
                 stat(next_label);
                 code.emit(OpCode.GOto, loop_label_while);
                 break;
-
             case '{':
                 match(Token.lpg.tag);
                 statlist(next_label);
                 match(Token.rpg.tag);
+                break;
+            default:
+                error("syntax error");
                 break;
         }
      }
@@ -161,6 +168,9 @@ public class Translator {
                 whenitem(false_label_cond);       
                 whenlistp(false_label_cond);
                 break;
+            default:
+                error("syntax error");
+                break;
         }
     }
 
@@ -170,7 +180,11 @@ public class Translator {
                 whenitem(false_label_cond);           
                 whenlistp(false_label_cond);
                 break;
-            case Tag.ELSE: break;
+            case Tag.ELSE:  
+                break;
+            default:
+                error("syntax error");
+                break;
         }
     }
 
@@ -186,6 +200,9 @@ public class Translator {
                 code.emitLabel(true_label_cond);            //etichetta per espressione true
                 stat(true_label_cond);
                 break;
+            default:
+                error("syntax error");
+                break;
         }
     }
 
@@ -198,7 +215,6 @@ public class Translator {
                 code.emit(OpCode.if_icmplt, true_label_cond);
 			    code.emit(OpCode.GOto, false_label_cond);
                 break;
-
             case ">":
                 match(Tag.RELOP);   
                 expr();
@@ -213,7 +229,6 @@ public class Translator {
                 code.emit(OpCode.if_icmpeq, true_label_cond);
 			    code.emit(OpCode.GOto, false_label_cond);
                 break;
-
             case "<=":
                 match(Tag.RELOP);   
                 expr();
@@ -221,7 +236,6 @@ public class Translator {
                 code.emit(OpCode.if_icmple, true_label_cond);
 			    code.emit(OpCode.GOto, false_label_cond);
                 break;
-
             case "<>":
                 match(Tag.RELOP);   
                 expr();
@@ -229,13 +243,15 @@ public class Translator {
                 code.emit(OpCode.if_icmpne, true_label_cond);
 			    code.emit(OpCode.GOto, false_label_cond);
                 break;
-
             case ">=":
                 match(Tag.RELOP);
                 expr();
                 expr();
                 code.emit(OpCode.if_icmpge, true_label_cond);
 			    code.emit(OpCode.GOto, false_label_cond);
+                break;
+            default:
+                error("syntax error");
                 break;
         }
     }
@@ -274,6 +290,9 @@ public class Translator {
                 code.emit(OpCode.iload, st.lookupAddress(((Word)look).lexeme));
                 match(Tag.ID);
                 break;
+            default:
+                error("syntax error");
+                break;
         }
     }
     
@@ -292,9 +311,10 @@ public class Translator {
                     expr();
                     exprlistp(operation);
                     code.emit(OpCode.imul);
+                } else {
+                    expr();
+                    exprlistp(operation);
                 }
-                expr();
-                exprlistp(operation);
                 break;
             case Tag.ID:
                 if (look.tag==Tag.ID) {
@@ -308,6 +328,9 @@ public class Translator {
                 } else {
                     error("Error in grammar (stat) after read( with " + look);
                 }
+                break;
+            default:
+                error("syntax error");
                 break;
         }
     }
@@ -327,9 +350,10 @@ public class Translator {
                     expr();
                     exprlistp(operation);
                     code.emit(OpCode.imul);
+                } else {
+                    expr();
+                    exprlistp(operation);
                 }
-                expr();
-                exprlistp(operation);
                 break;
             case Tag.ID:
                 if (look.tag==Tag.ID) {
@@ -345,6 +369,9 @@ public class Translator {
                 }
                 break;
             case ')':
+                break;
+            default:
+                error("syntax error");
                 break;
         }
     }
