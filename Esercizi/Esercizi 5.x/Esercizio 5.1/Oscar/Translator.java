@@ -303,17 +303,12 @@ public class Translator {
             case '*':
             case '/':
             case Tag.NUM:           
+                expr();
+                exprlistp(operation);
                 if (operation == '+'){
-                    expr();
-                    exprlistp(operation);
                     code.emit(OpCode.iadd);
                 } else if (operation == '*'){
-                    expr();
-                    exprlistp(operation);
                     code.emit(OpCode.imul);
-                } else {
-                    expr();
-                    exprlistp(operation);
                 }
                 break;
             case Tag.ID:
@@ -342,17 +337,12 @@ public class Translator {
             case '*':
             case '/':
             case Tag.NUM:
+                expr();
+                exprlistp(operation);
                 if (operation == '+'){
-                    expr();
-                    exprlistp(operation);
                     code.emit(OpCode.iadd);
                 } else if (operation == '*'){
-                    expr();
-                    exprlistp(operation);
                     code.emit(OpCode.imul);
-                } else {
-                    expr();
-                    exprlistp(operation);
                 }
                 break;
             case Tag.ID:
