@@ -121,12 +121,12 @@ public class Parser {
     
     private void fact() {
         switch (look.tag){
-            case '('://F-->NUM --- Guida = NUM
+            case '('://F-->(E) --- Guida = (
                 match(Token.lpt.tag);
                 expr();
                 match(Token.rpt.tag);
                 break;
-            case Tag.NUM://F-->(E) --- Guida = (
+            case Tag.NUM://F-->NUM --- Guida = NUM
                 match(Tag.NUM);
                 break;
             default:
