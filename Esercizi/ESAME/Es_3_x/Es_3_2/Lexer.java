@@ -42,7 +42,7 @@ public class Lexer {
                 while (flag) {
                     readch(br);//legge a vuoto finche non trova *
                     if (peek == '*') {
-                        readch(br);//legge a vuoto
+                        readch(br);
                         if (peek == '/'){//se ricosce / vuol dire che sono alla fine del coomento ( */)
                             flag = false; // imposto la variabeli a false cosi da uscire dal ciclo
                         }

@@ -1,4 +1,4 @@
-/*analisi sintattica per spressioni aritmetiche semplici,
+/*analisi sintattica per espressioni aritmetiche semplici,
 scritte in notazione infissa.*/
 
 import java.io.*;
@@ -23,7 +23,7 @@ public class Parser {
 	    throw new Error("near line " + lex.line + ": " + s);
     }
 
-    void match(int t) { // verifichiamo che il token(??suceesivo??) sia uguale al parametro di questa procedura
+    void match(int t) { // verifichiamo che il token (??suceesivo??) sia uguale al parametro di questa procedura
 	    if (look.tag == t) {
 	        if (look.tag != Tag.EOF) move(); //passiamo al simbolo suceesivo in caso non fossero uguali
 	    } else error("syntax error"); 
@@ -45,9 +45,9 @@ public class Parser {
         }
     }
 
-    private void expr() {//E -- > TE' ---- Guiga = (, NUM
+    private void expr() {
         switch (look.tag){
-            case '(':
+            case '('://E -- > TE' ---- Guiga = (, NUM
             case Tag.NUM:
                 term(); 
                 exprp();
