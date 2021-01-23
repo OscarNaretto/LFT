@@ -21,6 +21,10 @@ public class Lexer {
         while (peek == ' ' || peek == '\t' || peek == '\n'  || peek == '\r') {
             if (peek == '\n') line++;
             readch(br);
+            if (Character.isDigit(peek)) {  //se il primo carattere di una riga, segnalo un errore, un numero non può essere in testa alla linea
+                System.err.println("Non puoi mettere un numero in testa alla riga");
+                return null;
+            }
         }
 
         switch (peek) {      //faccio uno switch sul carattere per restituire il rispettivo token

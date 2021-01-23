@@ -16,8 +16,7 @@ public class Lexer {
     }
 
     private void cleaner(BufferedReader br){
-        /* metodo che esegue la traduzione in token del testo in imput */
-		/* se durante la traduzione vengono incontrati spazi, new line, ecc vengono ingorati e viene letto il carattere successivo*/
+        /* se durante la traduzione vengono incontrati spazi, new line, ecc vengono ingorati e viene letto il carattere successivo*/
         while (peek == ' ' || peek == '\t' || peek == '\n'  || peek == '\r') {
             if (peek == '\n') line++;
             readch(br);
@@ -25,9 +24,10 @@ public class Lexer {
     }
 
     public Token lexical_scan(BufferedReader br) {
-        
-        cleaner(br);// funzioni generata per evitare ripetizione del codice poiché usata successivamente
+        /* metodo che esegue la traduzione in token del testo in imput */
 
+        cleaner(br);   // funzioni generata per evitare ripetizione del codice poiché usata successivamente
+                                       
         if (peek == '/'){
             readch(br);
             if (peek == '/') { // --> //
@@ -199,21 +199,13 @@ public class Lexer {
             } else if (Character.isDigit(peek)) {
 
         // ... gestire il caso dei numeri ... //
-        //un numere non puo' apparire all'inizio
                 String Numero = "";
 
                 while(Character.isDigit(peek)){
                     Numero += peek;
                     readch(br);
                 }
-
-                if (Character.isDigit(peek)){
-                    return new NumberTok(Integer.parseInt(Numero));
-
-                } else {
-                    System.err.println("Non puoi mettere un numero in testa");
-                    return null;
-                }
+                return new NumberTok(Integer.parseInt(Numero));
             } else {
                 System.err.println("Erroneous character");
                 return null;
