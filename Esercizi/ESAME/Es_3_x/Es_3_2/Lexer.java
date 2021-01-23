@@ -36,8 +36,21 @@ public class Lexer {
     public Token lexical_scan(BufferedReader br) {
         /* metodo che esegue la traduzione in token del testo in imput */
 
-        if (!cleaner(br)){return null;}// funzioni generata per evitare ripetizione del codice poiché usata successivamente
-                                       //il valore di ritorno false coincide con un numero in testa alla line, quindi nel caso fermo il programma
+        if (!cleaner(br)){return null;} // funzioni generata per evitare ripetizione del codice poiché usata successivamente
+                                        //il valore di ritorno false coincide con un numero in testa alla line, quindi nel caso fermo il programma
+
+        final boolean numberCheck;
+        if (Character.isDigit(peek)){   //questa porzione di codice controlla se la prima linea inizi con un numero
+            numberCheck = true;         //utilizzando una variabile booleana final, in modo da assegnarle il valore solamente una volta
+        } else {
+            numberCheck = false;        //se trovo un carattere che non sia una cifra, setto a false, quindi non entrerà mai nell'if successivo
+        }
+
+        if (numberCheck){               //quindi entro solo se ho un cifra come primo carattere della prima linea. Le altre linee saranno controlate dal metodo cleaner sopra
+            System.err.println("Non puoi mettere un numero in testa alla riga");
+            return null;
+        }
+
         if (peek == '/'){
             readch(br);
             if (peek == '/') { // --> //
