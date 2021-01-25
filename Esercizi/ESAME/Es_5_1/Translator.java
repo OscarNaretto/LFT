@@ -101,7 +101,7 @@ public class Translator {
                     expr();
                     code.emit(OpCode.istore, id_addr);//stampo l'istruzione istore per la  variabile x
                 } else {
-                    error("Error in grammar (stat) after read( with " + look);
+                    error("Error in grammar (stat) after read() with " + look);
                 }
                 break;
             case Tag.PRINT://S--> print(EL) --- Guida = print
@@ -125,7 +125,7 @@ public class Translator {
                     code.emit(OpCode.invokestatic,0);//stampo l'istruzione read generata da invokstatic con parametro 0
                     code.emit(OpCode.istore,id_addr);
                 } else {
-                    error("Error in grammar (stat) after read( with " + look);
+                    error("Error in grammar (stat) after read() with " + look);
                 }
                 break;
             case Tag.COND://S--> cond WL else S  --- Guida = cond
