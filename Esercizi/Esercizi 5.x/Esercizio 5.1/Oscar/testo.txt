@@ -1,4 +1,4 @@
-read(x);
+1read(x);
 read(y);
 print(1+(2 3 4));
 cond

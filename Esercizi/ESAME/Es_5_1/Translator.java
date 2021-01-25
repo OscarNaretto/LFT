@@ -49,7 +49,7 @@ public class Translator {
                 };
                 break;
             default: //se non troviamo il tag previsto dall'insieme guida segnaliamo un'errore nel codice 
-                error("syntax error");
+                error("syntax error in grammar (prog): token " + look + " can't be accepted");
                 break;
         }
     }
@@ -66,7 +66,7 @@ public class Translator {
                 statlistp(next_label);
                 break;
             default:
-                error("syntax error");
+                error("syntax error in grammar (statlist): token " + look + " can't be accepted");
                 break;
         }
     }
@@ -82,7 +82,7 @@ public class Translator {
             case '}':           
                 break;
             default:
-                error("syntax error");
+                error("syntax error in grammar (statlistp): token " + look + " can't be accepted");
                 break;
         }
     }
@@ -157,7 +157,7 @@ public class Translator {
                 match(Token.rpg.tag);
                 break;
             default:
-                error("syntax error");
+                error("syntax error in grammar (stat): token " + look + " can't be accepted");
                 break;
         }
      }
@@ -169,7 +169,7 @@ public class Translator {
                 whenlistp(false_label_cond);
                 break;
             default:
-                error("syntax error");
+                error("syntax error in grammar (whenlist): token " + look + " can't be accepted");
                 break;
         }
     }
@@ -183,7 +183,7 @@ public class Translator {
             case Tag.ELSE://WL --> 3 --- Guida = else
                 break;
             default:
-                error("syntax error");
+                error("syntax error in grammar (whenlistp): token " + look + " can't be accepted");
                 break;
         }
     }
@@ -201,7 +201,7 @@ public class Translator {
                 stat(true_label_cond);
                 break;
             default:
-                error("syntax error");
+                error("syntax error in grammar (whenitem): token " + look + " can't be accepted");
                 break;
         }
     }
@@ -251,7 +251,7 @@ public class Translator {
 			    code.emit(OpCode.GOto, false_label_cond);
                 break;
             default:
-                error("syntax error");
+                error("syntax error in grammar (bexpr): token " + look + " can't be accepted");
                 break;
         }
     }
@@ -291,7 +291,7 @@ public class Translator {
                 match(Tag.ID);
                 break;
             default:
-                error("syntax error");
+                error("syntax error in grammar (expr): token " + look + " can't be accepted");
                 break;
         }
     }
@@ -325,7 +325,7 @@ public class Translator {
                 }
                 break;
             default:
-                error("syntax error");
+                error("syntax error in grammar (exprlist): token " + look + " can't be accepted");
                 break;
         }
     }
@@ -361,7 +361,7 @@ public class Translator {
             case ')':
                 break;
             default:
-                error("syntax error");
+                error("syntax error in grammar (exprlistp): token " + look + " can't be accepted");
                 break;
         }
     }
