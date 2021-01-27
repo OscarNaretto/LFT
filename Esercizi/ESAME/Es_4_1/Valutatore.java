@@ -1,6 +1,6 @@
 //Es 4.1
 import java.io.*; 
-
+/* Il Valutatore valuta le espressioni aritmetiche semplici utilizzando le SDT della sintassi.*/ 
 public class Valutatore {
     private Lexer lex;
     private BufferedReader pbr;
