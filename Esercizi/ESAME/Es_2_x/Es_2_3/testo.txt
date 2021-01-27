@@ -1,4 +1,8 @@
-___s_
+/* operzioni */
+x = 1
+y = 2
 
-
-a2 
+a = x + y  //addizione 1+2=3
+b = x * y  //moltiplicazione  1*2 = 2
+//print(a)
+print(b)
