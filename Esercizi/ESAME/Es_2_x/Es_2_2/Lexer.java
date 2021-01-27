@@ -1,7 +1,10 @@
 //Es2.2
 
 import java.io.*;
-
+/* Il Lexer è un analizzatore lessicale che riceve in Input un programma scritto in un linguaggio di programmazione,
+    come sequenza di caratteri. 
+    E restituisce come Output una sequenza di token che corrisponde ad un elemento atomico del linguaggio.
+*/
 public class Lexer {
 
     public static int line = 1;
@@ -16,12 +19,12 @@ public class Lexer {
     }
 
     public Token lexical_scan(BufferedReader br) {
-        /* metodo che esegue la traduzione in token del testo in imput */
+        /* metodo che esegue la traduzione in token del testo in input */
 		/* se durante la traduzione vengono incontrati spazi, new line, ecc vengono ingorati e viene letto il carattere successivo*/
         while (peek == ' ' || peek == '\t' || peek == '\n'  || peek == '\r') {
             if (peek == '\n') line++;
             readch(br);
-            if (Character.isDigit(peek)) {  //se il primo carattere di una riga, segnalo un errore, un numero non può essere in testa alla linea
+            if (Character.isDigit(peek)) {  //se il primo carattere di una riga è un numero, segnalo un errore, perchè non può essere in testa alla riga
                 System.err.println("Non puoi mettere un numero in testa alla riga");
                 return null;
             }
@@ -137,37 +140,39 @@ public class Lexer {
          2)NON può essere composto solo dal simbolo _*/
 
                 String identificatore = "";
+                while(peek == '_'){
+                    readch(br);
+                    if (peek == (char)-1){
+                        System.err.println("Errore: non posso accettare una stringa composta solo da underscore");     
+                         //Si verifica un'errore dato che l'identificatore presenta solo underscore
+                        return null;
+                    }
+                }
                 while(Character.isLetter(peek) || Character.isDigit(peek) || peek == '_'){  //continuo a comporre la stringa s finche trovo una lettera
                     identificatore += peek; // identificatore = identificatore + peek
                     readch(br);
                 }
-
                 switch(identificatore){
-                    case "cond": return Word.cond;
+                        case "cond": return Word.cond;
 
-                    case "when": return Word.when;
+                        case "when": return Word.when;
 
-                    case "then": return Word.then;
+                        case "then": return Word.then;
 
-                    case "else": return Word.elsetok;
+                        case "else": return Word.elsetok;
 
-                    case "while": return Word.whiletok;
+                        case "while": return Word.whiletok;
 
-                    case "do": return Word.dotok;
+                        case "do": return Word.dotok;
 
-                    case "seq": return Word.seq;
+                        case "seq": return Word.seq;
 
-                    case "print": return Word.print;
+                        case "print": return Word.print;
 
-                    case "read": return Word.read;
+                        case "read": return Word.read;
 
-                    case "_":
-                        System.err.println("Errore: solo underscore"); //Si verifica un'errore dato che l'identificatore presenta solo underscore
-                        return null;
-
-                    default: return new Word(Tag.ID,identificatore);
-                }
-
+                        default: return new Word(Tag.ID,identificatore);
+                    }
 
             } else if (Character.isDigit(peek)) {
 
@@ -196,7 +201,7 @@ public class Lexer {
 
     public static void main(String[] args) {
         Lexer lex = new Lexer();
-        String path = "testo.txt"; // il percorso del file da leggere
+        String path = "Test.txt"; // il percorso del file da leggere
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             Token tok;
