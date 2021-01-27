@@ -40,7 +40,6 @@
  ldc 4
  iadd 
  iadd 
- iadd 
  invokestatic Output/print(I)V
  iload 0
  iload 1
@@ -60,10 +59,6 @@ L4:
  if_icmpgt L5
  goto L0
 L5:
- iload 0
- ldc 1
- isub 
- istore 0
  iload 0
  invokestatic Output/print(I)V
  goto L4

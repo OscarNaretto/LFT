@@ -1,3 +1,6 @@
+/*Il traduttore si occupa di generare e accumulare nella propria variabile code il codice intermedio necessario 
+a jasmin per la generazione di Output.class*/
+
 import java.io.*;
 
 public class Translator {
