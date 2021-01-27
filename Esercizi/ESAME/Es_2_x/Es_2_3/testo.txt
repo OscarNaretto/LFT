@@ -1,10 +1,6 @@
-<<<<<<< HEAD
-___s_   //ciao
-=======
 /* operzioni */
 x = 1
 y = 2
->>>>>>> f5dc9d2740e231cd6e379cd57a1ab6707810b060
 
 a = x + y  //addizione 1+2=3
 b = x * y  //moltiplicazione  1*2 = 2

@@ -31,11 +31,7 @@ public class Lexer {
 
         cleaner(br);                //funzioni generata per evitare ripetizione del codice poiché usata successivamente
 
-<<<<<<< HEAD
-        while (peek == '/'){
-=======
         while(peek == '/'){
->>>>>>> f5dc9d2740e231cd6e379cd57a1ab6707810b060
             readch(br);
             if (peek == '/') {      // --> //
                 while (peek != (char)-1 && peek != '\n') { // ciclo fino a quando non vado a capo(new line) 
@@ -61,8 +57,6 @@ public class Lexer {
                 return Token.div;               // so che / è un Token
             }
         }
-        cleaner(br);
-
         cleaner(br);
 
         switch (peek) {                 //cerco gli identificatori di caratteri "semplici"
@@ -175,19 +169,8 @@ public class Lexer {
                 String identificatore = "";
                 
                 while(peek == '_'){             //controllo che non siano presenti solo '_' e accumulo in identificatore
-<<<<<<< HEAD
-                    identificatore += peek;
-                    readch(br);
-                    if (Character.isLetter(peek) || Character.isDigit(peek))                    {      //se ho solo underscore seguiti da spazio o caratteri di separazione, errore
-                        identificatore = identificatore;
-                    } else {
-                        System.err.println("Errore: non posso accettare una stringa composta solo da underscore"); //Si verifica un'errore dato che l'identificatore presenta solo underscore
-                        return null;
-                    }                                                                       //altrimenti avrò già accumulato la string in identificatore e proseguirò correttamente
-=======
                     identificatore += peek;     //altrimenti avrò già accumulato la string in identificatore e proseguirò correttamente
                     readch(br);                 
->>>>>>> f5dc9d2740e231cd6e379cd57a1ab6707810b060
                 }
                 if ((!Character.isLetter(peek) && !Character.isDigit(peek))){      //se ho solo underscore seguiti da spazio o caratteri di separazione, errore
                     System.err.println("Errore: utilizzo di underscore non valido"); //Si verifica un'errore dato che l'identificatore presenta solo underscore
