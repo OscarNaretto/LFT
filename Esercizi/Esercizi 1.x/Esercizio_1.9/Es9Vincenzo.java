@@ -21,8 +21,8 @@ public class Es9Vincenzo{
         if(ch == '*')
          state = 2;
         else
-         state = -1;
-        break;
+		state = -1;
+         break;
 
         case 2:
         if(ch == 'a' || ch == '/')

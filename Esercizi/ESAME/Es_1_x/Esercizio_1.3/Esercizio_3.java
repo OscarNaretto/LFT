@@ -51,8 +51,8 @@ public class Esercizio_3{
     }
 
 /* 
-Stringhe accettate: “2Bianchi ” e “122B ”
-Stringhe non accettate: “654321 ” e “Rossi ”
+Stringhe accettate: "2Bianchi " e "122B" 
+Stringhe non accettate: "654321 " e "Rossi ""
 */    
     public static void main(String args[]){
         System.out.println(scan(args[0]) ? "OK" : "NOPE");
