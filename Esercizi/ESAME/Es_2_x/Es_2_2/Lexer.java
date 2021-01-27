@@ -18,17 +18,26 @@ public class Lexer {
         }
     }
 
-    public Token lexical_scan(BufferedReader br) {
-        /* metodo che esegue la traduzione in token del testo in input */
-		/* se durante la traduzione vengono incontrati spazi, new line, ecc vengono ingorati e viene letto il carattere successivo*/
+    private void cleaner(BufferedReader br){
+        /* se durante la traduzione vengono incontrati spazi, new line, ecc vengono ingorati e viene letto il carattere successivo*/
+        //inoltre, ritorna falso se è presente un numero in testa alla linea, altrimenti true
         while (peek == ' ' || peek == '\t' || peek == '\n'  || peek == '\r') {
-            if (peek == '\n') line++;
-            readch(br);
-            if (Character.isDigit(peek)) {  //se il primo carattere di una riga è un numero, segnalo un errore, perchè non può essere in testa alla riga
-                System.err.println("Non puoi mettere un numero in testa alla riga");
-                return null;
+            if (peek == '\n'){                  //se sono andato a capo, incremento la line e controllo il primo carattere
+                line++;
+                readch(br);
+                if (Character.isDigit(peek)){  //se il primo carattere di una riga, segnalo un errore, un numero non può essere in testa alla linea
+                    System.err.println("Non puoi mettere un numero in testa alla riga");
+                }
+            } else {
+                readch(br);
             }
         }
+    }
+
+    public Token lexical_scan(BufferedReader br) {
+        /* metodo che esegue la traduzione in token del testo in input */
+        
+        cleaner(br);
 
         switch (peek) {      //faccio uno switch sul carattere per restituire il rispettivo token
             case '!':
@@ -142,9 +151,9 @@ public class Lexer {
                 String identificatore = "";
                 while(peek == '_'){
                     readch(br);
+                    cleaner(br);
                     if (peek == (char)-1){
-                        System.err.println("Errore: non posso accettare una stringa composta solo da underscore");     
-                         //Si verifica un'errore dato che l'identificatore presenta solo underscore
+                        System.err.println("Errore: non posso accettare una stringa composta solo da underscore"); //Si verifica un'errore dato che l'identificatore presenta solo underscore
                         return null;
                     }
                 }

@@ -1,7 +1,10 @@
 //Es2.3
 
 import java.io.*;
-
+/* Il Lexer è un analizzatore lessicale che riceve in Input un programma scritto in un linguaggio di programmazione,
+    come sequenza di caratteri. 
+    E restituisce come Output una sequenza di token che corrisponde ad un elemento atomico del linguaggio.
+*/
 public class Lexer {
 
     public static int line = 1;
@@ -175,6 +178,7 @@ public class Lexer {
                 
                 while(peek == '_'){
                     readch(br);
+                    cleaner(br);
                     if (peek == (char)-1){
                         System.err.println("Errore: non posso accettare una stringa composta solo da underscore");      //Si verifica un'errore dato che l'identificatore presenta solo underscore
                         return null;
