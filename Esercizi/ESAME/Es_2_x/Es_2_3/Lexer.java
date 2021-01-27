@@ -31,7 +31,7 @@ public class Lexer {
 
         cleaner(br);                //funzioni generata per evitare ripetizione del codice poiché usata successivamente
 
-        if (peek == '/'){
+        while (peek == '/'){
             readch(br);
             if (peek == '/') {      // --> //
                 while (peek != (char)-1 && peek != '\n') { // ciclo fino a quando non vado a capo(new line) 
@@ -52,12 +52,13 @@ public class Lexer {
                     }
                 }
                 readch(br);
-                cleaner(br);
             } else {
                 peek = ' ';                     // se non vengono rispettate le condizioni al di sopra di questa riga
                 return Token.div;               // so che / è un Token
             }
         }
+
+        cleaner(br);
 
         switch (peek) {                 //cerco gli identificatori di caratteri "semplici"
 
@@ -171,7 +172,9 @@ public class Lexer {
                 while(peek == '_'){             //controllo che non siano presenti solo '_' e accumulo in identificatore
                     identificatore += peek;
                     readch(br);
-                    if (peek == ' ' || peek == '\t' || peek == '\n'  || peek == '\r'){      //se ho solo underscore seguiti da spazio o caratteri di separazione, errore
+                    if (Character.isLetter(peek) || Character.isDigit(peek))                    {      //se ho solo underscore seguiti da spazio o caratteri di separazione, errore
+                        identificatore = identificatore;
+                    } else {
                         System.err.println("Errore: non posso accettare una stringa composta solo da underscore"); //Si verifica un'errore dato che l'identificatore presenta solo underscore
                         return null;
                     }                                                                       //altrimenti avrò già accumulato la string in identificatore e proseguirò correttamente

@@ -152,10 +152,10 @@ public class Lexer {
                 while(peek == '_'){             //controllo che non siano presenti solo '_' e accumulo in identificatore
                     identificatore += peek;
                     readch(br);
-                    if (peek == ' ' || peek == '\t' || peek == '\n'  || peek == '\r'){      //se ho solo underscore seguiti da spazio o caratteri di separazione, errore
-                        System.err.println("Errore: non posso accettare una stringa composta solo da underscore"); //Si verifica un'errore dato che l'identificatore presenta solo underscore
+                    if (!Character.isLetter(peek) && !Character.isDigit(peek)){          //se ho solo underscore seguiti da caratteri di separazione, errore
+                        System.err.println("Errore: utilizzo di underscore non valido"); //Si verifica un'errore dato che l'identificatore presenta solo underscore
                         return null;
-                    }                                                                       //altrimenti avrò già accumulato la string in identificatore e proseguirò correttamente
+                    }                                                                    //altrimenti avrò già accumulato la string in identificatore e proseguirò correttamente
                 }
                 
                 while(Character.isLetter(peek) || Character.isDigit(peek) || peek == '_'){  //continuo a comporre la stringa s finche trovo una lettera
