@@ -42,7 +42,7 @@ public class Lexer {
                 }
             } else if (peek == '*') {           // --> /*(inizio commenti)
                 boolean flag = true;
-                while (flag) {
+                while (flag && peek != (char)-1) {
                     readch(br);                 //legge a vuoto finche non trova *
                     if (peek == '*') {
                         readch(br);             //legge a vuoto
@@ -50,6 +50,10 @@ public class Lexer {
                             flag = false;       // imposto la variabeli a false cosi da uscire dal ciclo
                         }
                     }
+                }
+                if (peek == (char)-1){
+                    System.err.println("Il commento non viene chiuso correttamente");
+                    return null;
                 }
                 readch(br);
             } else {
