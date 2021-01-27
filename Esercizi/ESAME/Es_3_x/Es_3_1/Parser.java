@@ -70,8 +70,9 @@ public class Parser {
                 term();
                 exprp();
                 break;
-            case ')': break;                // E --> ϵ  ---- Guida = EOF, )
-            case Tag.EOF: break;
+            case ')':                // E --> ϵ  ---- Guida = EOF, )
+            case Tag.EOF: 
+                break;
             default:
                 error("syntax error in grammar (exprp): token " + look + " can't be accepted");
                 break;
@@ -106,7 +107,8 @@ public class Parser {
             case '+':                  //T--> ϵ     --- Guida = +,-,EOF               /*Nessuna produzione rilevante nei 4 casi*/
             case '-':
             case ')':
-            case Tag.EOF: break;
+            case Tag.EOF: 
+                break;
             default:
                 error("syntax error in grammar (termp): token " + look + " can't be accepted");
                 break;
