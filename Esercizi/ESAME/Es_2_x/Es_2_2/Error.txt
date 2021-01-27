@@ -1,4 +1,4 @@
-while( x != y){
+while( x != _){
     _i_ = x + y;
     x++
 }
