@@ -1,5 +1,3 @@
-//Es2.3
-
 import java.io.*;
 
 public class Lexer {
@@ -15,72 +13,15 @@ public class Lexer {
         }
     }
 
-    private boolean cleaner(BufferedReader br){
-        /* se durante la traduzione vengono incontrati spazi, new line, ecc vengono ingorati e viene letto il carattere successivo*/
-        //inoltre, ritorna falso se è presente un numero in testa alla linea, altrimenti true
-        while (peek == ' ' || peek == '\t' || peek == '\n'  || peek == '\r') {
-            if (peek == '\n'){      //se sono andato a capo, incremento la line e controllo il primo carattere
-                line++;
-                readch(br);
-                if (Character.isDigit(peek)) {  //se il primo carattere di una riga, segnalo un errore, un numero non può essere in testa alla linea
-                    System.err.println("Non puoi mettere un numero in testa alla riga");
-                    return false;
-                }
-            } else {
-                readch(br);
-            }
-        }
-        return true;
-    }
-
     public Token lexical_scan(BufferedReader br) {
         /* metodo che esegue la traduzione in token del testo in imput */
-
-        if (!cleaner(br)){return null;} // funzioni generata per evitare ripetizione del codice poiché usata successivamente
-                                        //il valore di ritorno false coincide con un numero in testa alla line, quindi nel caso fermo il programma
-
-        final boolean numberCheck;
-        if (Character.isDigit(peek)){   //questa porzione di codice controlla se la prima linea inizi con un numero
-            numberCheck = true;         //utilizzando una variabile booleana final, in modo da assegnarle il valore solamente una volta
-        } else {
-            numberCheck = false;        //se trovo un carattere che non sia una cifra, setto a false, quindi non entrerà mai nell'if successivo
-        }
-
-        if (numberCheck){               //quindi entro solo se ho un cifra come primo carattere della prima linea. Le altre linee saranno controlate dal metodo cleaner sopra
-            System.err.println("Non puoi mettere un numero in testa alla riga");
-            return null;
-        }
-
-        if (peek == '/'){
+		/* se durante la traduzione vengono incontrati spazi, new line, ecc vengono ingorati e viene letto il carattere successivo*/
+        while (peek == ' ' || peek == '\t' || peek == '\n'  || peek == '\r') {
+            if (peek == '\n') line++;
             readch(br);
-            if (peek == '/') { // --> //
-                while (peek != (char)-1 && peek != '\n') { // ciclo fino a quando non vado a capo(new line) 
-                   readch(br); 
-                }
-                if (peek != (char)-1) { //esco dal ciclo è controllo se sono arrivato alla fine
-                    readch(br); // se non  sono arrivato alla fine allora concludo il commento e leggo da br
-                }
-            } else if (peek == '*') { // --> /*(inizio commenti)
-                boolean flag = true;
-                while (flag) {
-                    readch(br);//legge a vuoto finche non trova *
-                    if (peek == '*') {
-                        readch(br);//legge a vuoto
-                        if (peek == '/'){//se ricosce / vuol dire che sono alla fine del coomento ( */)
-                            flag = false; // imposto la variabeli a false cosi da uscire dal ciclo
-                        }
-                    }
-                }
-                readch(br);
-                if (!cleaner(br)){return null;}
-            } else {
-                peek = ' '; // se non vengono rispettate le condizioni al di sopra di questa riga
-                return Token.div; // so che / è un Token
-            }
         }
 
-        switch (peek) {
-
+        switch (peek) {      //faccio uno switch sul carattere per restituire il rispettivo token
             case '!':
                 peek = ' ';  /* se viene letto un carattere, rimette peek a ' ' per il buon funzionamento dello scanner */
                 return Token.not;
@@ -114,29 +55,33 @@ public class Lexer {
                 peek = ' ';
                 return Token.mult;
 
+            case '/':
+                peek = ' ';
+                return Token.div;
+
             case ';':
                 peek = ' ';
                 return Token.semicolon;
 
             case '&':
-                readch(br);// leggo il simbolo sucessivo
-                if (peek == '&') {// se il simbolo sucessivo e' & allora restituisco il token del and (&&)
+                readch(br);
+                if (peek == '&') {
                     peek = ' ';
-                    return Word.and; // token &&
+                    return Word.and;
                 } else {
                     System.err.println("Erroneous character"
                             + " after & : "  + peek );
-                    return null; 
+                    return null;
                 }
 
         // ... gestire i casi di ||, <, >, <=, >=, ==, <>, = ... //
             case '|':
-                readch(br);//leggo il simbolo sucessivo
-                if(peek == '|'){// se il simbolo sucessivo è | allora restituisco il token del or (||)
+                readch(br);
+                if(peek == '|'){
                    peek = ' ';
-                    return Word.or;// token ||
+                return Word.or;
                 }else{
-                    System.err.println("Erroneous character" + " after | : "  + peek );
+                    System.out.println("Erroneous character" + " after | : "  + peek );
                     return null;
                 }
 
@@ -144,95 +89,99 @@ public class Lexer {
                 readch(br);
                 if(peek == '='){
                     peek = ' ';
-                    return Word.le; // <=
+                    return Word.le;
                 }else if(peek == '>'){
                     peek = ' ';
-                    return Word.ne;// <>
+                    return Word.ne;
                 }else
                     peek = ' ';
-                    return Word.lt;// <
+                    return Word.lt;
 
             case '>':
                 readch(br);
                 if(peek == '='){
                     peek = ' ';
-                    return Word.ge; // >=
+                    return Word.ge;
                 }else
                     peek = ' ';
-                    return Word.gt;// >
+                    return Word.gt;
 
             case '=':
                 readch(br);
                 if(peek == '='){
                     peek = ' ';
-                    return Word.eq; // ==
-                } else {
+                    return Word.eq;
+                }else
                     peek = ' ';
-                    return Token.assign; // =
-                }
+                    return Token.assign;
 
             case (char)-1:
                 return new Token(Tag.EOF);
                                                     // se peek non corrisponde a nessuno dei simboli conosciuti
             default:
-                if (Character.isLetter(peek) || peek == '_') {     // se peek è una lettera, potrebbe essere l'inizio di una
-                                                                   //parola chiave o di una nuova parola identificatore
+                if (Character.isLetter(peek)) {     // se peek è una lettera, potrebbe essere l'inizio di una
+                                                        //parola chiave o di una nuova parola identificatore
 
         // ... gestire il caso degli identificatori e delle parole chiave //
 
-        /*Definizione di identificatori: un
-         identificatore è composto da una sequenza non vuota di lettere,
-         numeri, ed il simbolo di ‘underscore’ _  :
-         1)NON comincia con un numero 
-         2)NON può essere composto solo dal simbolo _*/
-
                 String identificatore = "";
-                while(Character.isLetter(peek) || Character.isDigit(peek) || peek == '_'){  //continuo a comporre la stringa s finche trovo una lettera
-                    identificatore += peek;// identificatore = identificatore + peek
+                while(Character.isLetter(peek)){  //continuo a comporre la stringa s finche trovo una lettera
+                    identificatore += peek;
                     readch(br);
                 }
 
                 switch(identificatore){
-                    case "cond": return Word.cond;
+                    case "cond":
+                        identificatore = "";
+                        return Word.cond;
 
-                    case "when": return Word.when;
+                    case "when":
+                        identificatore = "";
+                        return Word.when;
 
-                    case "then": return Word.then;
+                    case "then":
+                        identificatore = "";
+                        return Word.then;
 
-                    case "else": return Word.elsetok;
+                    case "else":
+                        identificatore = "";
+                        return Word.elsetok;
 
-                    case "while": return Word.whiletok;
+                    case "while":
+                        identificatore = "";
+                        return Word.whiletok;
 
-                    case "do": return Word.dotok;
+                    case "do":
+                        identificatore = "";
+                        return Word.dotok;
 
-                    case "seq": return Word.seq;
+                    case "seq":
+                        identificatore = "";
+                        return Word.seq;
 
-                    case "print": return Word.print;
+                    case "print":
+                        identificatore = "";
+                        return Word.print;
 
-                    case "read": return Word.read;
-
-                    case "_":
-                        System.err.println("Errore: solo underscore");//Si verifica un'errore dato che l'identificatore presenta solo underscore
-                        return null;
-
-                    default: return new Word(Tag.ID,identificatore);
+                    case "read":
+                        identificatore = "";
+                        return Word.read;
                 }
 
-
+                return new Word(Tag.ID,identificatore);
             } else if (Character.isDigit(peek)) {
 
         // ... gestire il caso dei numeri ... //
                 String Numero = "";
-
                 while(Character.isDigit(peek)){
                     Numero += peek;
                     readch(br);
                 }
                 return new NumberTok(Integer.parseInt(Numero));
-            } else {
-                System.err.println("Erroneous character");
-                return null;
-            }
+                } else {
+                      System.err.println("Erroneous character: " + peek );
+                      return null;
+                }
         }
     }
 

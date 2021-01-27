@@ -1,5 +1,5 @@
 read(x);
-2read(y);
+read(y);
 print(1+(2 3 4));
 cond
 	when (> x y) do print(x) else print(y);

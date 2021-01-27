@@ -106,7 +106,7 @@ public class Translator {
                 break;
             case Tag.PRINT:
                 match(Tag.PRINT);
-				match(Token.lpt.tag);
+                match(Token.lpt.tag);
 				exprlist(Tag.PRINT);
 				match(Token.rpt.tag);
                 code.emit(OpCode.invokestatic,1);
@@ -305,11 +305,6 @@ public class Translator {
             case Tag.NUM:           
                 expr();
                 exprlistp(operation);
-                if (operation == '+'){
-                    code.emit(OpCode.iadd);
-                } else if (operation == '*'){
-                    code.emit(OpCode.imul);
-                }
                 break;
             case Tag.ID:
                 if (look.tag==Tag.ID) {
@@ -354,6 +349,11 @@ public class Translator {
                     }                    
                     expr();
                     exprlistp(operation);
+                    if (operation == '+'){
+                        code.emit(OpCode.iadd);
+                    } else if (operation == '*'){
+                        code.emit(OpCode.imul);
+                    }
                 } else {
                     error("Error in grammar (stat) after read( with " + look);
                 }

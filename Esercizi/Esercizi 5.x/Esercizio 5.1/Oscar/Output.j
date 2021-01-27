@@ -34,39 +34,14 @@
  istore 0
  invokestatic Output/read()I
  istore 1
- ldc 1
- ldc 2
- ldc 3
- ldc 4
- iadd 
- iadd 
- iadd 
- invokestatic Output/print(I)V
+ invokestatic Output/read()I
+ istore 2
  iload 0
  iload 1
- if_icmpgt L2
- goto L1
-L2:
- iload 0
+ iload 2
+ imul 
+ iadd 
  invokestatic Output/print(I)V
- goto L3
-L1:
- iload 1
- invokestatic Output/print(I)V
-L3:
-L4:
- iload 0
- ldc 0
- if_icmpgt L5
- goto L0
-L5:
- iload 0
- ldc 1
- isub 
- istore 0
- iload 0
- invokestatic Output/print(I)V
- goto L4
 L0:
  return
 .end method
