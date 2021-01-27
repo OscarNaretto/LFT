@@ -1,6 +1,1 @@
-print(1+(2 3 4))
-
-
-ciao //questo non lo leggi, vero?
-meno male! /*nemmeno questo dovresti vederlo, comunque*/
-errore
+____
