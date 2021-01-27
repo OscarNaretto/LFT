@@ -1,3 +1,7 @@
+/*Il DFA che riconosca le stringhe che contengono
+un numero di matricola seguito (subito) da un cognome, del turno T1 o T4.
+*/ 
+
 public class Esercizio_3Bis{
     public static boolean scan(String s){
         int state = 0;
@@ -45,6 +49,10 @@ public class Esercizio_3Bis{
         }
     return state == 2;
     }
+
+/* Stringhe accettate: “654321Bianchi ” e “123456Rossi ” 
+   Stringhe non accettate: “123456Bianchi ” e “654321Rossi ” 
+*/ 
 
     public static void main(String args[]){
         System.out.println(scan(args[0]) ? "OK" : "NOPE");

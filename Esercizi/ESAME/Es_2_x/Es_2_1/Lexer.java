@@ -1,6 +1,10 @@
 //Es2.1
 
 import java.io.*;
+/* Il Lexer è un analizzatore lessicale che riceve in Input un programma scritto in un linguaggio di programmazione,
+    come sequenza di caratteri. 
+    E restituisce come Output una sequenza di token che corrisponde ad un elemento atomico del linguaggio.
+*/
 
 public class Lexer {
 
@@ -174,7 +178,7 @@ public class Lexer {
 
     public static void main(String[] args) {
         Lexer lex = new Lexer();
-        String path = "testo.txt"; // il percorso del file da leggere
+        String path = "Test.txt"; // il percorso del file da leggere
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             Token tok;
