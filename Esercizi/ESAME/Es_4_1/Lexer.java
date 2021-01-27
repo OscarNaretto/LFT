@@ -11,7 +11,7 @@ public class Lexer {
         try {
             peek = (char) br.read();
         } catch (IOException exc) {
-            peek = (char) -1; // ERROR
+            peek = (char) -1;                  // ERROR
         }
     }
 
@@ -26,43 +26,43 @@ public class Lexer {
     public Token lexical_scan(BufferedReader br) {
         /* metodo che esegue la traduzione in token del testo in imput */
 
-        cleaner(br);   // funzioni generata per evitare ripetizione del codice poiché usata successivamente
+        cleaner(br);                                       //funzione generata per evitare ripetizioni del codice poiché usata successivamente
                                        
         if (peek == '/'){
             readch(br);
-            if (peek == '/') { // --> //
+            if (peek == '/') {                             // --> //
                 while (peek != (char)-1 && peek != '\n') { // ciclo fino a quando non vado a capo(new line) 
                    readch(br); 
                 }
-                if (peek != (char)-1) { //esco dal ciclo è controllo se sono arrivato alla fine
-                    readch(br); // se non  sono arrivato alla fine allora concludo il commento e leggo da br
+                if (peek != (char)-1) {                    //esco dal ciclo è controllo se sono arrivato alla fine
+                    readch(br);                            // se non  sono arrivato alla fine allora concludo il commento e leggo da br
                 }
-            } else if (peek == '*') { // --> /*(inizio commenti)
+            } else if (peek == '*') {                      // --> /*(inizio commenti)
                 boolean flag = true;
                 while (flag) {
-                    readch(br);//legge a vuoto finche non trova *
+                    readch(br);                            //legge a vuoto finche non trova *
                     if (peek == '*') {
-                        readch(br);//legge a vuoto
-                        if (peek == '/'){//se ricosce / vuol dire che sono alla fine del coomento ( */)
-                            flag = false; // imposto la variabeli a false cosi da uscire dal ciclo
+                        readch(br);                        //legge a vuoto
+                        if (peek == '/'){                  //se ricosce / vuol dire che sono alla fine del coomento ( */)
+                            flag = false;                  // imposto la variabeli a false cosi da uscire dal ciclo
                         }
                     }
                 }
                 readch(br);
                 cleaner(br);
             } else {
-                peek = ' '; // se non vengono rispettate le condizioni al di sopra di questa riga
-                return Token.div; // so che / è un Token
+                peek = ' ';                                // se non vengono rispettate le condizioni al di sopra di questa riga
+                return Token.div;                          // so che / è un Token
             }
         }
 
         switch (peek) {
 
             case '!':
-                peek = ' ';  /* se viene letto un carattere, rimette peek a ' ' per il buon funzionamento dello scanner */
+                peek = ' ';        /* se viene letto un carattere, rimette peek a ' ' per il buon funzionamento dello scanner */
                 return Token.not;
 
-	    // ... gestire i casi di (, ), {, }, +, -, *, /, ; ... //
+	    // ... gestire i casi di (, ), {, }, +, -, *, /, ; ... 
             case '(':
                 peek = ' ';
                 return Token.lpt;
@@ -96,10 +96,10 @@ public class Lexer {
                 return Token.semicolon;
 
             case '&':
-                readch(br);// leggo il simbolo sucessivo
-                if (peek == '&') {// se il simbolo sucessivo e' & allora restituisco il token del and (&&)
+                readch(br);             // leggo il simbolo sucessivo
+                if (peek == '&') {      // se il simbolo sucessivo e' & allora restituisco il token del and (&&)
                     peek = ' ';
-                    return Word.and; // token &&
+                    return Word.and;    // token &&
                 } else {
                     System.err.println("Erroneous character"
                             + " after & : "  + peek );
@@ -108,10 +108,10 @@ public class Lexer {
 
         // ... gestire i casi di ||, <, >, <=, >=, ==, <>, = ... //
             case '|':
-                readch(br);//leggo il simbolo sucessivo
-                if(peek == '|'){// se il simbolo sucessivo è | allora restituisco il token del or (||)
+                readch(br);             //leggo il simbolo sucessivo
+                if(peek == '|'){        // se il simbolo sucessivo è | allora restituisco il token del or (||)
                    peek = ' ';
-                    return Word.or;// token ||
+                    return Word.or;     // token ||
                 }else{
                     System.err.println("Erroneous character" + " after | : "  + peek );
                     return null;
@@ -121,39 +121,39 @@ public class Lexer {
                 readch(br);
                 if(peek == '='){
                     peek = ' ';
-                    return Word.le; // <=
+                    return Word.le;     // <=
                 }else if(peek == '>'){
                     peek = ' ';
-                    return Word.ne;// <>
+                    return Word.ne;     // <>
                 }else
                     peek = ' ';
-                    return Word.lt;// <
+                    return Word.lt;     // <
 
             case '>':
                 readch(br);
                 if(peek == '='){
                     peek = ' ';
-                    return Word.ge; // >=
+                    return Word.ge;     // >=
                 }else
                     peek = ' ';
-                    return Word.gt;// >
+                    return Word.gt;     // >
 
             case '=':
                 readch(br);
                 if(peek == '='){
                     peek = ' ';
-                    return Word.eq; // ==
+                    return Word.eq;     // ==
                 } else {
                     peek = ' ';
-                    return Token.assign; // =
+                    return Token.assign;// =
                 }
 
             case (char)-1:
                 return new Token(Tag.EOF);
-                                                    // se peek non corrisponde a nessuno dei simboli conosciuti
+                                                                // se peek non corrisponde a nessuno dei simboli conosciuti
             default:
-                if (Character.isLetter(peek) || peek == '_') {     // se peek è una lettera, potrebbe essere l'inizio di una
-                                                                   //parola chiave o di una nuova parola identificatore
+                if (Character.isLetter(peek) || peek == '_') {  // se peek è una lettera, potrebbe essere l'inizio di una
+                                                                //parola chiave o di una nuova parola identificatore
 
         // ... gestire il caso degli identificatori e delle parole chiave //
 
@@ -164,8 +164,8 @@ public class Lexer {
          2)NON può essere composto solo dal simbolo _*/
 
                 String identificatore = "";
-                while(Character.isLetter(peek) || Character.isDigit(peek) || peek == '_'){  //continuo a comporre la stringa s finche trovo una lettera
-                    identificatore += peek;// identificatore = identificatore + peek
+                while(Character.isLetter(peek) || Character.isDigit(peek) || peek == '_'){  //continuo a comporre la stringa s finche trovo una lettera, una cifra o un underscore
+                    identificatore += peek;                                                 //e metto la stringa in identificatore, concatenandogli peek
                     readch(br);
                 }
 
@@ -189,7 +189,7 @@ public class Lexer {
                     case "read": return Word.read;
 
                     case "_":
-                        System.err.println("Errore: solo underscore");//Si verifica un'errore dato che l'identificatore presenta solo underscore
+                        System.err.println("Errore: solo underscore");    //Si verifica un'errore dato che l'identificatore presenta solo underscore
                         return null;
 
                     default: return new Word(Tag.ID,identificatore);
@@ -215,7 +215,7 @@ public class Lexer {
 
     public static void main(String[] args) {
         Lexer lex = new Lexer();
-        String path = "testo.txt"; // il percorso del file da leggere
+        String path = "testo.txt";           // il percorso del file da leggere
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             Token tok;

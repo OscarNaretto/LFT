@@ -5,9 +5,9 @@ public class Translator {
     private BufferedReader pbr;
     private Token look;
     
-    SymbolTable st = new SymbolTable();
-    CodeGenerator code = new CodeGenerator();
-    int count=0;
+    SymbolTable st = new SymbolTable();               //mappa usata per caricarvi le variabili presenti nel codice da tradurre
+    CodeGenerator code = new CodeGenerator();         //attributo nel quale si accumula il codice da scrivere poi nell'output
+    int count=0;                                      //all'interno di una lista di oggetti Instruction
 
     public Translator(Lexer l, BufferedReader br) {
         lex = l;

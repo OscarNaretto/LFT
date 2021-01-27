@@ -26,40 +26,39 @@ public class Lexer {
     public Token lexical_scan(BufferedReader br) {
         /* metodo che esegue la traduzione in token del testo in imput */
 
-        cleaner(br);   // funzioni generata per evitare ripetizione del codice poiché usata successivamente
+        cleaner(br);                                        // funzioni generata per evitare ripetizione del codice poiché usata successivamente
                                        
         if (peek == '/'){
             readch(br);
-            if (peek == '/') { // --> //
-                while (peek != (char)-1 && peek != '\n') { // ciclo fino a quando non vado a capo(new line) 
+            if (peek == '/') {                              // --> //
+                while (peek != (char)-1 && peek != '\n') {  // ciclo fino a quando non vado a capo(new line) 
                    readch(br); 
                 }
-                if (peek != (char)-1) { //esco dal ciclo è controllo se sono arrivato alla fine
-                    readch(br); // se non  sono arrivato alla fine allora concludo il commento e leggo da br
+                if (peek != (char)-1) {                     //esco dal ciclo è controllo se sono arrivato alla fine
+                    readch(br);                             // se non  sono arrivato alla fine allora concludo il commento e leggo da br
                 }
-            } else if (peek == '*') { // --> /*(inizio commenti)
+            } else if (peek == '*') {                       // --> /*(inizio commenti)
                 boolean flag = true;
                 while (flag) {
-                    readch(br);//legge a vuoto finche non trova *
+                    readch(br);                             //legge a vuoto finche non trova *
                     if (peek == '*') {
-                        readch(br);//legge a vuoto
-                        if (peek == '/'){//se ricosce / vuol dire che sono alla fine del coomento ( */)
-                            flag = false; // imposto la variabeli a false cosi da uscire dal ciclo
+                        readch(br);                         //legge a vuoto
+                        if (peek == '/'){                   //se ricosce / vuol dire che sono alla fine del coomento ( */)
+                            flag = false;                   // imposto la variabeli a false cosi da uscire dal ciclo
                         }
                     }
                 }
                 readch(br);
                 cleaner(br);
             } else {
-                peek = ' '; // se non vengono rispettate le condizioni al di sopra di questa riga
-                return Token.div; // so che / è un Token
+                peek = ' ';         // se non vengono rispettate le condizioni al di sopra di questa riga
+                return Token.div;   // so che / è un Token
             }
         }
 
         switch (peek) {
-
             case '!':
-                peek = ' ';  /* se viene letto un carattere, rimette peek a ' ' per il buon funzionamento dello scanner */
+                peek = ' ';         /* se viene letto un carattere, rimette peek a ' ' per il buon funzionamento dello scanner */
                 return Token.not;
 
 	    // ... gestire i casi di (, ), {, }, +, -, *, /, ; ... //
@@ -96,10 +95,10 @@ public class Lexer {
                 return Token.semicolon;
 
             case '&':
-                readch(br);// leggo il simbolo sucessivo
-                if (peek == '&') {// se il simbolo sucessivo e' & allora restituisco il token del and (&&)
+                readch(br);             // leggo il simbolo sucessivo
+                if (peek == '&') {      // se il simbolo sucessivo e' & allora restituisco il token del and (&&)
                     peek = ' ';
-                    return Word.and; // token &&
+                    return Word.and;    // token &&
                 } else {
                     System.err.println("Erroneous character"
                             + " after & : "  + peek );
@@ -108,10 +107,10 @@ public class Lexer {
 
         // ... gestire i casi di ||, <, >, <=, >=, ==, <>, = ... //
             case '|':
-                readch(br);//leggo il simbolo sucessivo
-                if(peek == '|'){// se il simbolo sucessivo è | allora restituisco il token del or (||)
+                readch(br);             //leggo il simbolo sucessivo
+                if(peek == '|'){        // se il simbolo sucessivo è | allora restituisco il token del or (||)
                    peek = ' ';
-                    return Word.or;// token ||
+                    return Word.or;     // token ||
                 }else{
                     System.err.println("Erroneous character" + " after | : "  + peek );
                     return null;

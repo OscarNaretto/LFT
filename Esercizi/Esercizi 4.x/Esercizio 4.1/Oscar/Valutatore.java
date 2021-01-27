@@ -72,7 +72,7 @@ public class Valutatore {
                 term_val = term();
                 exprp_val = exprp(exprp_i - term_val);
                 break;
-            case ')':              //i due casi epsilon, quindi nessuna produzione rilevante
+            case ')':                   //i due casi ϵ, quindi nessuna produzione rilevante
             case Tag.EOF: 
                 exprp_val = exprp_i;    //il sintetizzato di E' prende quindi il valore dell'ereditato
                 break;
@@ -113,7 +113,7 @@ public class Valutatore {
                 fact_val = fact();
                 termp_val = termp(termp_i / fact_val);
                 break;
-            case '+':               //4 casi con produzione epsilon di nuovo
+            case '+':               //4 casi con produzione ϵ di nuovo
             case '-':
             case ')':
             case Tag.EOF:             
@@ -148,7 +148,7 @@ public class Valutatore {
 
     public static void main(String[] args) {
         Lexer lex = new Lexer();
-        String path = "testo.txt"; // il percorso del file da leggere
+        String path = "testo.txt";
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             Valutatore valutatore = new Valutatore(lex, br);
