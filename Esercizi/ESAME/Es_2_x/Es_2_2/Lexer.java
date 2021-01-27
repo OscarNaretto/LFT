@@ -149,14 +149,15 @@ public class Lexer {
          2)NON può essere composto solo dal simbolo _*/
 
                 String identificatore = "";
-                while(peek == '_'){
+                while(peek == '_'){             //controllo che non siano presenti solo '_' e accumulo in identificatore
+                    identificatore += peek;
                     readch(br);
-                    cleaner(br);
-                    if (peek == (char)-1){
+                    if (peek == ' ' || peek == '\t' || peek == '\n'  || peek == '\r'){      //se ho solo underscore seguiti da spazio o caratteri di separazione, errore
                         System.err.println("Errore: non posso accettare una stringa composta solo da underscore"); //Si verifica un'errore dato che l'identificatore presenta solo underscore
                         return null;
-                    }
+                    }                                                                       //altrimenti avrò già accumulato la string in identificatore e proseguirò correttamente
                 }
+                
                 while(Character.isLetter(peek) || Character.isDigit(peek) || peek == '_'){  //continuo a comporre la stringa s finche trovo una lettera
                     identificatore += peek; // identificatore = identificatore + peek
                     readch(br);
@@ -185,26 +186,27 @@ public class Lexer {
 
             } else if (Character.isDigit(peek)) {
 
-        // ... gestire il caso dei numeri ... //
-        //un numere non puo' apparire all'inizio
+                // ... gestire il caso dei numeri ... //
+                //un numere non puo' apparire all'inizio
                 String Numero = "";
-
-                while(Character.isDigit(peek)){
+        
+                while(Character.isDigit(peek)){ //inizio l'analisi di valori numerici. In seguito controllerò se il token è composto solamente da numeri o no
                     Numero += peek;
                     readch(br);
                 }
-
-                if (Character.isDigit(peek)){
-                    return new NumberTok(Integer.parseInt(Numero));
-
-                } else {
-                    System.err.println("Non puoi mettere un numero in testa");
+                
+                //controllo l'ultimo carattere letto, che può essere l'ultimo numero oppure la prima occorrenza di un carattere non numerico
+                
+                if (Character.isLetter(peek) || peek == '_'){   //se il carattere non è numerico, segnalo un errore   
+                    System.err.println("Non puoi mettere un numero in testa ad un identificatore!");
                     return null;
+                } else {
+                    return new NumberTok(Integer.parseInt(Numero));
                 }
             } else {
                 System.err.println("Erroneous character");
                 return null;
-            }
+            }   
         }
     }
 

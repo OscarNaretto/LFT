@@ -22,15 +22,7 @@ public class Lexer {
         /* se durante la traduzione vengono incontrati spazi, new line, ecc vengono ingorati e viene letto il carattere successivo*/
         //inoltre, ritorna falso se è presente un numero in testa alla linea, altrimenti true
         while (peek == ' ' || peek == '\t' || peek == '\n'  || peek == '\r') {
-            if (peek == '\n'){                  //se sono andato a capo, incremento la line e controllo il primo carattere
-                line++;
-                readch(br);
-                if (Character.isDigit(peek)) {  //se il primo carattere di una riga, segnalo un errore, un numero non può essere in testa alla linea
-                    System.err.println("Non puoi mettere un numero in testa alla riga");
-                }
-            } else {
-                readch(br);
-            }
+            readch(br);
         }
     }
 
@@ -176,13 +168,13 @@ public class Lexer {
 
                 String identificatore = "";
                 
-                while(peek == '_'){
+                while(peek == '_'){             //controllo che non siano presenti solo '_' e accumulo in identificatore
+                    identificatore += peek;
                     readch(br);
-                    cleaner(br);
-                    if (peek == (char)-1){
-                        System.err.println("Errore: non posso accettare una stringa composta solo da underscore");      //Si verifica un'errore dato che l'identificatore presenta solo underscore
+                    if (peek == ' ' || peek == '\t' || peek == '\n'  || peek == '\r'){      //se ho solo underscore seguiti da spazio o caratteri di separazione, errore
+                        System.err.println("Errore: non posso accettare una stringa composta solo da underscore"); //Si verifica un'errore dato che l'identificatore presenta solo underscore
                         return null;
-                    }
+                    }                                                                       //altrimenti avrò già accumulato la string in identificatore e proseguirò correttamente
                 }
 
                 while(Character.isLetter(peek) || Character.isDigit(peek) || peek == '_'){  //continuo a comporre la stringa s finche trovo una lettera
@@ -215,16 +207,25 @@ public class Lexer {
 
             } else if (Character.isDigit(peek)) {
 
-        // ... gestire il caso dei numeri ... //
+                // ... gestire il caso dei numeri ... //
+                //un numere non puo' apparire all'inizio
                 String Numero = "";
-
-                while(Character.isDigit(peek)){
+        
+                while(Character.isDigit(peek)){ //inizio l'analisi di valori numerici. In seguito controllerò se il token è composto solamente da numeri o no
                     Numero += peek;
                     readch(br);
                 }
-                return new NumberTok(Integer.parseInt(Numero));
+                
+                //controllo l'ultimo carattere letto, che può essere l'ultimo numero oppure la prima occorrenza di un carattere non numerico
+                
+                if (Character.isLetter(peek) || peek == '_'){   //se il carattere non è numerico, segnalo un errore   
+                    System.err.println("Non puoi mettere un numero in testa ad un identificatore!");
+                    return null;
+                } else {
+                    return new NumberTok(Integer.parseInt(Numero));
+                }
             } else {
-                System.err.println("Erroneous character in integer token:" + peek);
+                System.err.println("Erroneous character");
                 return null;
             }
         }
