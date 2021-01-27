@@ -50,8 +50,8 @@ public class Esercizio_3Bis{
     return state == 2;
     }
 
-/* Stringhe accettate: “654321Bianchi ” e “123456Rossi ” 
-   Stringhe non accettate: “123456Bianchi ” e “654321Rossi ” 
+/* Stringhe accettate: "654321Bianchi " e "123456Rossi " 
+   Stringhe non accettate: "123456Bianchi " e “654321Rossi " 
 */ 
 
     public static void main(String args[]){
