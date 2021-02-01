@@ -147,7 +147,7 @@ public class Translator {
                 match(Token.lpt.tag);
                 int loop_label_while = code.newLabel();     //etichetta del loop
                 int continue_label_while = code.newLabel(); //etichetta per entrare nel corpo del while
-                int next_instruction = code.newLabel();
+                int next_instruction = code.newLabel();     //etichetta della prossima istruzione dopo il while
                 code.emitLabel(loop_label_while);
                 bexpr(continue_label_while, next_instruction);          //gestisce la condizione del loop
                 match(Token.rpt.tag);
