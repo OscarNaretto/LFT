@@ -1,0 +1,23 @@
+read(a);
+read(b);
+read(c);
+= max a;
+cond
+    when(> a b) do = max a
+    when(> c a) do = max c
+    else = max b;
+cond
+    when(> b c) do = max b
+    else = max c;
+while(< a max){
+     = a + (a 1)
+};
+print(a);
+while (< b max){
+     = b + (b 1)
+};
+print(b);
+while(< b max){
+     = c + (c 1)
+};
+print(c)

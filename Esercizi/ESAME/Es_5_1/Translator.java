@@ -147,12 +147,14 @@ public class Translator {
                 match(Token.lpt.tag);
                 int loop_label_while = code.newLabel();     //etichetta del loop
                 int continue_label_while = code.newLabel(); //etichetta per entrare nel corpo del while
+                int next_instruction = code.newLabel();
                 code.emitLabel(loop_label_while);
-                bexpr(continue_label_while, next_label);    //gestisce la condizione del loop
+                bexpr(continue_label_while, next_instruction);          //gestisce la condizione del loop
                 match(Token.rpt.tag);
                 code.emitLabel(continue_label_while);
-                stat(next_label);
+                stat(next_instruction);
                 code.emit(OpCode.GOto, loop_label_while);
+                code.emitLabel(next_instruction);
                 break;
             case '{':                                       //S--> {SL} --- Guida = {
                 match(Token.lpg.tag);
@@ -372,7 +374,7 @@ public class Translator {
     public static void main(String[] args) {
 		Lexer lex = new Lexer();
 
-		String path = "testo.txt"; 
+		String path = "test.txt"; 
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(path));
 				Translator translator = new Translator(lex, br); 
