@@ -308,7 +308,10 @@ public class Translator {
             case '/':
             case Tag.NUM:           
                 expr();
-                exprlistp(operation);                  
+                exprlistp(operation);
+                if (operation == Tag.PRINT){
+                    code.emit(OpCode.invokestatic,1);           //stampo l'istruzione print generata da invokstatic con parametro 1
+                }              
                 break;
             case Tag.ID:
                 if (look.tag==Tag.ID) {
@@ -319,6 +322,9 @@ public class Translator {
                     }                    
                     expr();
                     exprlistp(operation);
+                    if (operation == Tag.PRINT){
+                        code.emit(OpCode.invokestatic,1);           //stampo l'istruzione print generata da invokstatic con parametro 1
+                    }
                 } else {
                     error("Error in grammar (exprlist) after read(): token " + look + " can't be accepted");
                 }
