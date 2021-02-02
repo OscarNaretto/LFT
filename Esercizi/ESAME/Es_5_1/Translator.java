@@ -111,7 +111,8 @@ public class Translator {
                 match(Tag.PRINT);
 				match(Token.lpt.tag);
 				exprlist(Tag.PRINT);
-				match(Token.rpt.tag);
+                match(Token.rpt.tag);
+                code.emit(OpCode.invokestatic,1);           //stampo l'istruzione print generata da invokstatic con parametro 1
                 break;
             case Tag.READ:                                  //S--> read(ID) --- Guida = read
                 match(Tag.READ);
@@ -342,7 +343,7 @@ public class Translator {
                     code.emit(OpCode.iadd);      //questa verifica con conseguente emit è effettuata solo in EL', per evitare codice con ripetizioni errate
                 } else if (operation == '*'){
                     code.emit(OpCode.imul);
-                } else if (operation == Tag.PRINT){
+                } else if (operation == Tag.PRINT){             //usata per stampare più identificatori/numeri
                     code.emit(OpCode.invokestatic,1);           //stampo l'istruzione print generata da invokstatic con parametro 1
                 }                            
                 break;
@@ -359,7 +360,7 @@ public class Translator {
                         code.emit(OpCode.iadd);
                     } else if (operation == '*'){
                         code.emit(OpCode.imul);
-                    } else if (operation == Tag.PRINT){
+                    } else if (operation == Tag.PRINT){             //condizione usata per stampare liste di espressioni
                         code.emit(OpCode.invokestatic,1);           //stampo l'istruzione print generata da invokstatic con parametro 1
                     }   
                 } else {
