@@ -112,7 +112,6 @@ public class Translator {
 				match(Token.lpt.tag);
 				exprlist(Tag.PRINT);
 				match(Token.rpt.tag);
-                code.emit(OpCode.invokestatic,1);           //stampo l'istruzione print generata da invokstatic con parametro 1
                 break;
             case Tag.READ:                                  //S--> read(ID) --- Guida = read
                 match(Tag.READ);
@@ -343,7 +342,9 @@ public class Translator {
                     code.emit(OpCode.iadd);      //questa verifica con conseguente emit è effettuata solo in EL', per evitare codice con ripetizioni errate
                 } else if (operation == '*'){
                     code.emit(OpCode.imul);
-                }                                //da notare che in caso di operando print non emettiamo nulla. Se ne occuperà la procedura stat
+                } else if (operation == Tag.PRINT){
+                    code.emit(OpCode.invokestatic,1);           //stampo l'istruzione print generata da invokstatic con parametro 1
+                }                            
                 break;
             case Tag.ID:
                 if (look.tag==Tag.ID) {
@@ -358,7 +359,9 @@ public class Translator {
                         code.emit(OpCode.iadd);
                     } else if (operation == '*'){
                         code.emit(OpCode.imul);
-                    }     
+                    } else if (operation == Tag.PRINT){
+                        code.emit(OpCode.invokestatic,1);           //stampo l'istruzione print generata da invokstatic con parametro 1
+                    }   
                 } else {
                     error("Error in grammar (exprlistp) after read(): token " + look + " can't be accepted");
                 }
