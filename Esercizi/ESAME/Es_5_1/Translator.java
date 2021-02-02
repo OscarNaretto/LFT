@@ -112,7 +112,6 @@ public class Translator {
 				match(Token.lpt.tag);
 				exprlist(Tag.PRINT);
                 match(Token.rpt.tag);
-                code.emit(OpCode.invokestatic,1);           //stampo l'istruzione print generata da invokstatic con parametro 1
                 break;
             case Tag.READ:                                  //S--> read(ID) --- Guida = read
                 match(Tag.READ);
