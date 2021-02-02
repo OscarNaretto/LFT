@@ -348,7 +348,7 @@ public class Translator {
                     code.emit(OpCode.iadd);      //questa verifica con conseguente emit è effettuata solo in EL', per evitare codice con ripetizioni errate
                 } else if (operation == '*'){
                     code.emit(OpCode.imul);
-                } else if (operation == Tag.PRINT){             //usata per stampare più identificatori/numeri
+                } else if (operation == Tag.PRINT){             //condizione usata per stampare liste di espressioni
                     code.emit(OpCode.invokestatic,1);           //stampo l'istruzione print generata da invokstatic con parametro 1
                 }                            
                 break;
