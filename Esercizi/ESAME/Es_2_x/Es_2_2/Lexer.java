@@ -18,26 +18,13 @@ public class Lexer {
         }
     }
 
-    private void cleaner(BufferedReader br){
-        /* se durante la traduzione vengono incontrati spazi, new line, ecc vengono ingorati e viene letto il carattere successivo*/
-        //inoltre, ritorna falso se è presente un numero in testa alla linea, altrimenti true
-        while (peek == ' ' || peek == '\t' || peek == '\n'  || peek == '\r') {
-            if (peek == '\n'){                  //se sono andato a capo, incremento la line e controllo il primo carattere
-                line++;
-                readch(br);
-                if (Character.isDigit(peek)){  //se il primo carattere di una riga, segnalo un errore, un numero non può essere in testa alla linea
-                    System.err.println("Non puoi mettere un numero in testa alla riga");
-                }
-            } else {
-                readch(br);
-            }
-        }
-    }
-
     public Token lexical_scan(BufferedReader br) {
-        /* metodo che esegue la traduzione in token del testo in input */
-        
-        cleaner(br);
+        /* metodo che esegue la traduzione in token del testo in imput */
+		/* se durante la traduzione vengono incontrati spazi, new line, ecc vengono ingorati e viene letto il carattere successivo*/
+        while (peek == ' ' || peek == '\t' || peek == '\n'  || peek == '\r') {
+            if (peek == '\n') line++;
+            readch(br);
+        }
 
         switch (peek) {      //faccio uno switch sul carattere per restituire il rispettivo token
             case '!':

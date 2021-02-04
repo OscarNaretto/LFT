@@ -20,8 +20,8 @@ public class Lexer {
 
     private void cleaner(BufferedReader br){
         /* se durante la traduzione vengono incontrati spazi, new line, ecc vengono ingorati e viene letto il carattere successivo*/
-        //inoltre, ritorna falso se è presente un numero in testa alla linea, altrimenti true
         while (peek == ' ' || peek == '\t' || peek == '\n'  || peek == '\r') {
+            if (peek == '\n') line++;
             readch(br);
         }
     }
@@ -51,11 +51,11 @@ public class Lexer {
                         }
                     }
                 }
+                readch(br);
                 if (peek == (char)-1){
                     System.err.println("Il commento non viene chiuso correttamente");
                     return null;
                 }
-                readch(br);
             } else {
                 peek = ' ';                     // se non vengono rispettate le condizioni al di sopra di questa riga
                 return Token.div;               // so che / è un Token
@@ -141,7 +141,7 @@ public class Lexer {
                 if(peek == '='){
                     peek = ' ';
                     return Word.ge;     // >=
-                }else
+                } else
                     peek = ' ';
                     return Word.gt;     // >
 
