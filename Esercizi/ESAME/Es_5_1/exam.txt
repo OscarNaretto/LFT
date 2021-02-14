@@ -1,0 +1,7 @@
+read(x);
+read(y);
+= k 1;
+while (<= *(x k) y){
+    = k +(k 1)
+};
+print(k)
