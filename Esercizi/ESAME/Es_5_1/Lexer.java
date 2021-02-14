@@ -52,7 +52,7 @@ public class Lexer {
                     }
                 }
                 readch(br);
-                if (peek == (char)-1){
+                if (peek == (char)-1 && flag){
                     System.err.println("Il commento non viene chiuso correttamente");
                     return null;
                 }
@@ -236,7 +236,7 @@ public class Lexer {
 
     public static void main(String[] args) {
         Lexer lex = new Lexer();
-        String path = "testo.txt";
+        String path = "test.txt";
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             Token tok;
