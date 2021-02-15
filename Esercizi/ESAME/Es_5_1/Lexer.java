@@ -29,7 +29,7 @@ public class Lexer {
     public Token lexical_scan(BufferedReader br) {
         /* metodo che esegue la traduzione in token del testo in imput */
 
-        cleaner(br);                //funzioni generata per evitare ripetizione del codice poiché usata successivamente
+        cleaner(br);                //funzione generata per evitare ripetizione del codice poiché usata successivamente
 
         while(peek == '/'){
             readch(br);
@@ -46,8 +46,8 @@ public class Lexer {
                     readch(br);                 //legge a vuoto finche non trova *
                     if (peek == '*') {
                         readch(br);             //legge a vuoto
-                        if (peek == '/'){       //se ricosce / vuol dire che sono alla fine del coomento ( */)
-                            flag = false;       // imposto la variabeli a false cosi da uscire dal ciclo
+                        if (peek == '/'){       //se ricosce / vuol dire che sono alla fine del commento ( */)
+                            flag = false;       // imposto la variabile a false così da uscire dal ciclo
                         }
                     }
                 }
@@ -180,7 +180,7 @@ public class Lexer {
                     System.err.println("Errore: utilizzo di underscore non valido"); //Si verifica un'errore dato che l'identificatore presenta solo underscore
                     return null;
                 }     
-                while(Character.isLetter(peek) || Character.isDigit(peek) || peek == '_'){  //continuo a comporre la stringa s finche trovo una lettera
+                while(Character.isLetter(peek) || Character.isDigit(peek) || peek == '_'){  //continuo a comporre la stringa s finchè trovo una lettera
                     identificatore += peek;                                                 // identificatore = identificatore + peek
                     readch(br);
                 }

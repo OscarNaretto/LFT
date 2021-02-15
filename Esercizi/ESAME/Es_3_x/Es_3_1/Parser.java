@@ -1,8 +1,5 @@
-/*analisi sintattica per espressioni aritmetiche semplici,
-scritte in notazione infissa.*/
-
 import java.io.*;
-
+//Il Parser fa analisi sintattica per espressioni aritmetiche semplici, scritte in notazione infissa.
 public class Parser {
     private Lexer lex;
     private BufferedReader pbr;
@@ -29,12 +26,12 @@ public class Parser {
 	    } else error("syntax error"); 
     }
 
-    /*Calcoliamo gli isemeni guida cosi da capire 
+    /*Calcoliamo gli insiemi guida cosi da capire 
     quale procedura attiva in base a ciò che legge il parser*/
 
     public void start() {
         switch (look.tag){
-            case '(':                       // S--> E$ ---- Guida = (, NUM
+            case '(':                       // S--> E$ ---- Guida: (, NUM
             case Tag.NUM:
                 expr();
                 match(Tag.EOF);
@@ -47,7 +44,7 @@ public class Parser {
 
     private void expr() {
         switch (look.tag){
-            case '(':                      //E -- > TE' ---- Guida = (, NUM
+            case '(':                      //E -- > TE' ---- Guida: (, NUM
             case Tag.NUM:
                 term(); 
                 exprp();
@@ -60,17 +57,17 @@ public class Parser {
 
     private void exprp() {
 	    switch (look.tag) {
-            case '+':                       // E--> +TE' ---- Guida = +
+            case '+':                       // E--> +TE' ---- Guida: +
                 match(Token.plus.tag);
                 term();
                 exprp();
                 break;
-            case '-':                       // E--> -TE'---- Guida = -
+            case '-':                       // E--> -TE'---- Guida: -
                 match(Token.minus.tag);
                 term();
                 exprp();
                 break;
-            case ')':                // E --> ϵ  ---- Guida = EOF, )
+            case ')':                // E --> ϵ  ---- Guida: EOF, )
             case Tag.EOF: 
                 break;
             default:
@@ -81,7 +78,7 @@ public class Parser {
 
     private void term() {
         switch (look.tag){
-            case '(':                 //T-->FT'----- Guida = (, NUM
+            case '(':                 //T-->FT'----- Guida: (, NUM
             case Tag.NUM:
                 fact();
                 termp();
@@ -94,17 +91,17 @@ public class Parser {
     
     private void termp() {
         switch (look.tag){
-            case '*':                  //T--> *FT' --- Guida = *
+            case '*':                  //T--> *FT' --- Guida: *
                 match(Token.mult.tag);
                 fact();
                 termp();
                 break;
-            case '/':                  //T--> /FT' --- Guida = /
+            case '/':                  //T--> /FT' --- Guida: /
                 match(Token.div.tag);
                 fact();
                 termp();
                 break;
-            case '+':                  //T--> ϵ     --- Guida = +,-,EOF               /*Nessuna produzione rilevante nei 4 casi*/
+            case '+':                  //T--> ϵ     --- Guida: +,-,EOF               /*Nessuna produzione rilevante nei 4 casi*/
             case '-':
             case ')':
             case Tag.EOF: 
@@ -117,12 +114,12 @@ public class Parser {
 
     private void fact() {
         switch (look.tag){
-            case '(':                   //F-->(E) --- Guida = (
+            case '(':                   //F-->(E) --- Guida: (
                 match(Token.lpt.tag);
                 expr();
                 match(Token.rpt.tag);
                 break;
-            case Tag.NUM:               //F-->NUM --- Guida = NUM
+            case Tag.NUM:               //F-->NUM --- Guida: NUM
                 match(Tag.NUM);
                 break;
             default:

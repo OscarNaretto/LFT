@@ -27,7 +27,7 @@ public class Valutatore {
 	    } else error("syntax error");
     }
 
-    /*Calcoliamo gli insime  guida cosi da capire 
+    /*Calcoliamo gli insieme guida cosi da capire 
     quale procedura attiva in base a ciò che legge il valutatore*/
 
     /*Se X è una variabile, il metodo invoca la procedura X passando a X come
@@ -39,7 +39,7 @@ public class Valutatore {
         int expr_val = 0;                   //inizializzo a zero il valore dell'attributo 
         
         switch (look.tag){
-            case '(':                       // S--> E$ ---- Guida = (, NUM
+            case '(':                       // S--> E$ ---- Guida: (, NUM
             case Tag.NUM:
                 expr_val = expr();          //assegnamo all'attributo il valore di E           
                 match(Tag.EOF);
@@ -55,7 +55,7 @@ public class Valutatore {
         int term_val, exprp_val = 0;
 
         switch (look.tag){
-            case '(':                           //E -- > TE' ---- Guida = (, NUM
+            case '(':                           //E -- > TE' ---- Guida: (, NUM
             case Tag.NUM:
                 term_val = term();              //assegnamo all'attributo il valore di T
                 exprp_val = exprp(term_val);    //assegnamo all'attributo il valore ereditario di E'
@@ -73,17 +73,17 @@ public class Valutatore {
         int term_val, exprp_val = 0;               
 
         switch (look.tag) {
-            case '+':                       //E--> +TE' ---- Guida = +
+            case '+':                       //E--> +TE' ---- Guida: +
                 match('+');
                 term_val = term();          //assegnamo all'attributo il valore di T
                 exprp_val = exprp(exprp_i + term_val);
                 break;
-            case '-':                       //E--> -TE'---- Guida = -
+            case '-':                       //E--> -TE'---- Guida: -
                 match('-');
                 term_val = term();
                 exprp_val = exprp(exprp_i - term_val);      // assegnamo all'attributo il valore ereditario E'1.i
                 break;
-            case ')':                       //E --> ϵ  ---- Guida = EOF, )  Nessuna produzione rilevante nei 2 casi           
+            case ')':                       //E --> ϵ  ---- Guida: EOF, )  Nessuna produzione rilevante nei 2 casi           
             case Tag.EOF: 
                 exprp_val = exprp_i;        //il sintetizzato di E' prende quindi il valore dell'ereditato
                 break;
@@ -98,7 +98,7 @@ public class Valutatore {
         int fact_val, term_val = 0;
         
         switch (look.tag){
-            case '(':                       //T-->FT'----- Guida = (, NUM
+            case '(':                       //T-->FT'----- Guida: (, NUM
             case Tag.NUM:
                 fact_val = fact();
                 term_val = termp(fact_val); // assegnamo all'attributo il valore ereditario T'.i
@@ -116,17 +116,17 @@ public class Valutatore {
         int fact_val, termp_val = 0;        
 
         switch (look.tag){
-            case '*':                       //T--> *FT' --- Guida = *
+            case '*':                       //T--> *FT' --- Guida: *
                 match(Token.mult.tag);
                 fact_val = fact();
                 termp_val = termp(termp_i * fact_val);  // assegnamo all'attributo il valore ereditario T'1.i
                 break;
-            case '/':                                   //T--> /FT' --- Guida = /
+            case '/':                                   //T--> /FT' --- Guida: /
                 match(Token.div.tag);
                 fact_val = fact();
                 termp_val = termp(termp_i / fact_val);  // assegnamo all'attributo il valore ereditario T'1.i
                 break;
-            case '+':                                   //T-->ϵ     --- Guida = +,-,EOF               
+            case '+':                                   //T-->ϵ     --- Guida: +,-,EOF               
             case '-':                                   /*Nessuna produzione rilevante nei 4 casi, poiché va in epsilon*/ 
             case ')':
             case Tag.EOF:             
@@ -143,12 +143,12 @@ public class Valutatore {
         int fact_val = 0;
 
         switch (look.tag){
-            case '(':                                   //F-->(E) --- Guida = (
+            case '(':                                   //F-->(E) --- Guida: (
                 match(Token.lpt.tag);
                 fact_val = expr();                      // assegnamo all'attributo il valore E
                 match(Token.rpt.tag);
                 break;
-            case Tag.NUM:                               //F-->NUM --- Guida = NUM
+            case Tag.NUM:                               //F-->NUM --- Guida: NUM
                 fact_val = ((NumberTok)look).number;    //faccio un downcast per la  conversione da Token a NumberTok, per poter usare l'attributo number
                 match(Tag.NUM);
                 break;

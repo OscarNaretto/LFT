@@ -69,8 +69,8 @@ public class Lexer {
                 return Token.semicolon;
 
             case '&':
-                readch(br); // leggo il simbolo sucessivo
-                if (peek == '&') {// se il simbolo sucessivo e' & allora restituisco il token del and (&&)
+                readch(br); // leggo il simbolo successivo
+                if (peek == '&') {// se il simbolo successivo e' & allora restituisco il token del and (&&)
                     peek = ' ';
                     return Word.and; // token &&
                 } else {
@@ -81,8 +81,8 @@ public class Lexer {
 
         // ... gestire i casi di ||, <, >, <=, >=, ==, <>, = ... //
             case '|':
-                readch(br); //leggo il simbolo sucessivo 
-                if(peek == '|'){ // se il simbolo sucessivo è | allora restituisco il token del or (||)
+                readch(br); //leggo il simbolo successivo 
+                if(peek == '|'){ // se il simbolo successivo è | allora restituisco il token del or (||)
                    peek = ' ';
                     return Word.or; // token ||
                 }else{

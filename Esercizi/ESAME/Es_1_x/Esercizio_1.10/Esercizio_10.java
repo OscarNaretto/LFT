@@ -1,4 +1,4 @@
-//Il DFA rinoscelinguaggio di stringhe (sull’alfabeto {/, *, a} ) che contengono “commenti”
+//Il DFA rinosce linguaggio di stringhe (sull’alfabeto {/, *, a} ) che contengono “commenti”
 //delimitati da /* e */ , ma con la possibilità di avere stringhe prima e dopo
 public class Esercizio_10{
     public static boolean scan(String s){

@@ -35,7 +35,7 @@ public class Translator {
 
     public void prog() {  
         switch(look.tag){
-            case '=':                                 //P--> SL EOF --- Guida = =,print,read,cond,while,{
+            case '=':                                 //P--> SL EOF --- Guida: =,print,read,cond,while,{
             case Tag.PRINT:
             case Tag.READ:
             case Tag.COND:
@@ -46,12 +46,12 @@ public class Translator {
                 code.emitLabel(next_label);           //stampa l'ultima label (L0)
                 match(Tag.EOF);
                 try {
-                    code.toJasmin();                  //Richima il metodo toJasmin di CodeGeneretor che, grazie alla classe di supporto Instruction,genera il codice intermedio(IJVM)
+                    code.toJasmin();                  //Richiama il metodo toJasmin di CodeGeneretor che, grazie alla classe di supporto Instruction,genera il codice intermedio(IJVM)
                 } catch(java.io.IOException e) {
                     System.out.println("IO error\n");
                 };
                 break;
-            default:                                  //se non troviamo il tag previsto dall'insieme guida segnaliamo un'errore nel codice 
+            default:                                  //se non troviamo il tag previsto dall'insieme guida segnaliamo un errore nel codice 
                 error("syntax error in grammar (prog): token " + look + " can't be accepted");
                 break;
         }
@@ -59,7 +59,7 @@ public class Translator {
 
     private void statlist(int next_label) {         //viene passata l'etichetta a stat() utilizzata in caso di salti
         switch(look.tag){
-            case '=':                               //SL-->S SL' --- Guida = =,print,read,cond,while,{
+            case '=':                               //SL-->S SL' --- Guida: =,print,read,cond,while,{
             case Tag.PRINT:
             case Tag.READ:
             case Tag.COND:
@@ -76,12 +76,12 @@ public class Translator {
 
     private void statlistp(int next_label) {          //viene passata l'etichetta a stat() utilizzata in caso di salti
         switch (look.tag) {
-            case ';':                                 //SL'--> ;S SL' --- Guida = ;
+            case ';':                                 //SL'--> ;S SL' --- Guida: ;
                 match(Token.semicolon.tag);
                 stat(next_label);           
                 statlistp(next_label);
                 break;
-            case Tag.EOF:                             //SL'--> 3 --- Guida = EOF,}
+            case Tag.EOF:                             //SL'--> 3 --- Guida: EOF,}
             case '}':           
                 break;
             default:
@@ -92,7 +92,7 @@ public class Translator {
 
     public void stat(int next_label) {
         switch(look.tag) {
-            case '=':                                                      //S--> =ID(E)--- Guida = =
+            case '=':                                                      //S--> =ID(E) --- Guida: =
                 match(Token.assign.tag);
                 if (look.tag==Tag.ID) {
                     int id_addr = st.lookupAddress(((Word)look).lexeme);   //cerchiamo l'id della variabile x e lo carichiamo nella variabile id_addr
@@ -107,13 +107,13 @@ public class Translator {
                     error("Error in grammar (stat) after read(): token " + look + " can't be accepted");
                 }
                 break;
-            case Tag.PRINT:                                 //S--> print(EL) --- Guida = print
+            case Tag.PRINT:                                 //S--> print(EL) --- Guida: print
                 match(Tag.PRINT);
 				match(Token.lpt.tag);
 				exprlist(Tag.PRINT);
                 match(Token.rpt.tag);
                 break;
-            case Tag.READ:                                  //S--> read(ID) --- Guida = read
+            case Tag.READ:                                  //S--> read(ID) --- Guida: read
                 match(Tag.READ);
                 match('(');
                 if (look.tag==Tag.ID) {
@@ -130,7 +130,7 @@ public class Translator {
                     error("Error in grammar (stat) after read(): token " + look + " can't be accepted");
                 }
                 break;
-            case Tag.COND:                                  //S--> cond WL else S  --- Guida = cond
+            case Tag.COND:                                  //S--> cond WL else S  --- Guida: cond
                 match(Tag.COND);
                 int false_label_cond = code.newLabel();     //creiamo una nuova etichetta usata per saltare alla condizione falsa
                 whenlist(false_label_cond);
@@ -141,7 +141,7 @@ public class Translator {
                 stat(next_label);
                 code.emitLabel(next_label);             
                 break;
-            case Tag.WHILE:                                 //S--> while(B)S --- Guida = while
+            case Tag.WHILE:                                 //S--> while(B)S --- Guida: while
                 match(Tag.WHILE);
                 match(Token.lpt.tag);
                 int loop_label_while = code.newLabel();     //etichetta del loop
@@ -155,7 +155,7 @@ public class Translator {
                 code.emit(OpCode.GOto, loop_label_while);
                 code.emitLabel(next_instruction);
                 break;
-            case '{':                                       //S--> {SL} --- Guida = {
+            case '{':                                       //S--> {SL} --- Guida: {
                 match(Token.lpg.tag);
                 statlist(next_label);
                 match(Token.rpg.tag);
@@ -168,7 +168,7 @@ public class Translator {
 
     private void whenlist(int false_label_cond) { //lista delle condizioni 
         switch(look.tag){                         //passa la label a whenitem e whenlist che a loro volta la passeranno a bexpr
-            case Tag.WHEN:                        //WL --> WI WL' --- Guida = when
+            case Tag.WHEN:                        //WL --> WI WL' --- Guida: when
                 whenitem(false_label_cond);       
                 whenlistp(false_label_cond);
                 break;
@@ -180,11 +180,11 @@ public class Translator {
 
     private void whenlistp(int false_label_cond) {
         switch(look.tag){
-            case Tag.WHEN:                              //WL' --> WI WL' --- Guida = when
+            case Tag.WHEN:                              //WL' --> WI WL' --- Guida: when
                 whenitem(false_label_cond);           
                 whenlistp(false_label_cond);
                 break;
-            case Tag.ELSE:                              //WL --> 3 --- Guida = else
+            case Tag.ELSE:                              //WL --> 3 --- Guida: else
                 break;
             default:
                 error("syntax error in grammar (whenlistp): token " + look + " can't be accepted");
@@ -194,7 +194,7 @@ public class Translator {
 
     private void whenitem(int false_label_cond) {           //when do
         switch(look.tag){
-            case Tag.WHEN:                                  //WI --> when(B)doS --- Guida = when
+            case Tag.WHEN:                                  //WI --> when(B)doS --- Guida: when
                 int true_label_cond = code.newLabel();
                 match(Tag.WHEN);            
                 match(Token.lpt.tag);
@@ -212,7 +212,7 @@ public class Translator {
 
     private void bexpr(int true_label_cond, int false_label_cond) {  // metodo usato per verificare le condioni e stampare i salti 
         switch(((Word)look).lexeme){
-            case "<":                                                //B -- > RELOP E E --- Guida = RELOP
+            case "<":                                                //B -- > RELOP E E --- Guida: RELOP
                 match(Tag.RELOP);   
                 expr();
                 expr();
@@ -262,35 +262,35 @@ public class Translator {
 
     private void expr() {
         switch(look.tag) {
-            case '+':                             //E --> +(EL) --- Guida = +
+            case '+':                             //E --> +(EL) --- Guida: +
                 match(Token.plus.tag);
                 match(Token.lpt.tag);       
-                exprlist('+');                    //passiamo l'attributo "+" in maniera che exprlist possa memorizzare l'operzione da eseguire a catena 
+                exprlist('+');                    //passiamo l'attributo "+" in maniera che exprlist possa memorizzare l'operazione da eseguire a catena 
                 match(Token.rpt.tag);
                 break;
-            case '-':                             //E --> -EE --- Guida = -
+            case '-':                             //E --> -EE --- Guida: -
                 match('-');
                 expr();
                 expr();
                 code.emit(OpCode.isub);           //Dopo aver richiamato le procedure expr emettiamo il codice dell'operazione 
                 break;
-            case '*':                             //E --> *(EL) --- Guida = *
+            case '*':                             //E --> *(EL) --- Guida: *
                 match(Token.mult.tag);
                 match(Token.lpt.tag);       
-                exprlist('*');                    //passiamo l'attributo "*" in maniera che exprlist possa memorizzare l'operzione da eseguire a catena
+                exprlist('*');                    //passiamo l'attributo "*" in maniera che exprlist possa memorizzare l'operazione da eseguire a catena
                 match(Token.rpt.tag);
                 break;
-            case '/':                                                          //E --> /EE --- Guida = /
+            case '/':                                                          //E --> /EE --- Guida: /
                 match(Token.div.tag);
                 expr();
                 expr();
                 code.emit(OpCode.idiv);                                        //Dopo aver richiamato le procedure expr emettiamo il codice dell'operazione 
                 break;
-            case Tag.NUM:                                                      //E --> NUM --- Guida = NUM
+            case Tag.NUM:                                                      //E --> NUM --- Guida: NUM
                 code.emit(OpCode.ldc, ((NumberTok)look).number);               //accediamo all'attributo number tramite downcast
                 match(Tag.NUM);
                 break;
-            case Tag.ID:                                                       //E --> ID --- Guida = ID
+            case Tag.ID:                                                       //E --> ID --- Guida: ID
                 code.emit(OpCode.iload, st.lookupAddress(((Word)look).lexeme));//accediamo all'attributo lexeme tramite downcast e ne cerchiamo l'indirizzo 
                 match(Tag.ID);
                 break;
@@ -300,7 +300,7 @@ public class Translator {
         }
     }
     
-    private void exprlist(int operation) { //EL -->  E EL' --- Guida = +,-,*,/,NUM,ID  
+    private void exprlist(int operation) { //EL -->  E EL' --- Guida: +,-,*,/,NUM,ID  
         switch(look.tag){                  //exprlist prende ad argomento l'operazione da eseguire
             case '+':                      //questo serve infatti a tenere l'operazione in memoria
             case '-':                      //nel caso di somme o moltiplicazioni al fine di poterle concatenare
@@ -337,7 +337,7 @@ public class Translator {
 
     private void exprlistp(int operation) {
         switch(look.tag){
-            case '+':                            //EL' -->  E EL' --- Guida = +,-,*,/,NUM,ID
+            case '+':                            //EL' -->  E EL' --- Guida: +,-,*,/,NUM,ID
             case '-':
             case '*':
             case '/':

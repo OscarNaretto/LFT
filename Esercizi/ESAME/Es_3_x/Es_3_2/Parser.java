@@ -1,5 +1,5 @@
 import java.io.*;
-
+//Il Parser fa analisi sintattica per espressioni aritmetiche semplici, scritte in notazione infissa.
 public class Parser {
     private Lexer lex;
     private BufferedReader pbr;
@@ -26,7 +26,7 @@ public class Parser {
 	} else error("syntax error");
     }
 
-    public void prog() {         //P--> SL EOF --- Guida = =,print,read,cond,while,{
+    public void prog() {         //P--> SL EOF --- Guida: =,print,read,cond,while,{
         switch(look.tag){
             case '=':      
             case Tag.PRINT:
@@ -45,7 +45,7 @@ public class Parser {
 
     private void statlist() { //SL
         switch(look.tag){
-            case '=':         //SL-->S SL' --- Guida = =,print,read,cond,while,{
+            case '=':         //SL-->S SL' --- Guida: =,print,read,cond,while,{
             case Tag.PRINT:
             case Tag.READ:
             case Tag.COND:
@@ -62,12 +62,12 @@ public class Parser {
     
     private void statlistp() {  // SL'
         switch (look.tag) {
-            case ';':           //SL'--> ;S SL' --- Guida = ;
+            case ';':           //SL'--> ;S SL' --- Guida: ;
                 match(Token.semicolon.tag);
                 stat();
                 statlistp();
                 break;
-            case Tag.EOF:       //SL'--> ϵ --- Guida = EOF,}
+            case Tag.EOF:       //SL'--> ϵ --- Guida: EOF,}
             case '}':
                 break;
             default:
@@ -78,37 +78,37 @@ public class Parser {
     
     private void stat() {
         switch(look.tag){
-            case '=':                       //S--> =ID(E)--- Guida = =
+            case '=':                       //S--> =ID(E)--- Guida: =
                 match(Token.assign.tag);
                 match(Tag.ID);
                 expr();
                 break;
-            case Tag.PRINT:                 //S--> print(EL) --- Guida = print
+            case Tag.PRINT:                 //S--> print(EL) --- Guida: print
                 match(Tag.PRINT);
                 match(Token.lpt.tag);
                 exprlist();
                 match(Token.rpt.tag);
                 break;
-            case Tag.READ:                  //S--> read(ID) --- Guida = read
+            case Tag.READ:                  //S--> read(ID) --- Guida: read
                 match(Tag.READ);
                 match(Token.lpt.tag);
                 match(Tag.ID);
                 match(Token.rpt.tag);
                 break;
-            case Tag.COND:                  //S--> cond WL else S  --- Guida = cond
+            case Tag.COND:                  //S--> cond WL else S  --- Guida: cond
                 match(Tag.COND);
                 whenlist();
                 match(Tag.ELSE);
                 stat();
                 break;
-            case Tag.WHILE:                 //S--> while(B)S --- Guida = while
+            case Tag.WHILE:                 //S--> while(B)S --- Guida: while
                 match(Tag.WHILE);
                 match(Token.lpt.tag);
                 bexpr();
                 match(Token.rpt.tag);
                 stat();
                 break;
-            case '{':                       //S--> {SL} --- Guida = {
+            case '{':                       //S--> {SL} --- Guida: {
                 match(Token.lpg.tag);
                 statlist();
                 match(Token.rpg.tag);
@@ -121,7 +121,7 @@ public class Parser {
 
     private void whenlist() {      //WL
         switch(look.tag){
-            case Tag.WHEN:         //WL --> WI WL' --- Guida = when
+            case Tag.WHEN:         //WL --> WI WL' --- Guida: when
                 whenitem();
                 whenlistp();
                 break;
@@ -133,11 +133,11 @@ public class Parser {
     
     private void whenlistp() { //WL'
         switch(look.tag){
-            case Tag.WHEN:     //WL' --> WI WL' --- Guida = when
+            case Tag.WHEN:     //WL' --> WI WL' --- Guida: when
                 whenitem();
                 whenlistp();
                 break;
-            case Tag.ELSE:     //WL --> ϵ --- Guida = else
+            case Tag.ELSE:     //WL --> ϵ --- Guida: else
                 break;
             default:
                 error("syntax error in grammar (whenlistp): token " + look + " can't be accepted");
@@ -147,7 +147,7 @@ public class Parser {
 
     private void whenitem() { //WI
         switch(look.tag){
-            case Tag.WHEN:    //WI --> when(B)doS --- Guida = when 
+            case Tag.WHEN:    //WI --> when(B)doS --- Guida: when 
                 match(Tag.WHEN);
                 match(Token.lpt.tag);
                 bexpr();
@@ -162,7 +162,7 @@ public class Parser {
     }
 
     private void bexpr() {          //B
-        switch(look.tag){           //B -- > RELOP E E --- Guida = RELOP
+        switch(look.tag){           //B -- > RELOP E E --- Guida: RELOP
             case Tag.RELOP:
                 match(Tag.RELOP);
                 expr();
@@ -176,32 +176,32 @@ public class Parser {
     
     private void expr() {       //E
         switch(look.tag){
-            case '+':           //E --> +(EL) --- Guida = +
+            case '+':           //E --> +(EL) --- Guida: +
                 match(Token.plus.tag);
                 match(Token.lpt.tag);
                 exprlist();
                 match(Token.rpt.tag);
                 break;
-            case '-':           //E --> -EE --- Guida = -
+            case '-':           //E --> -EE --- Guida: -
                 match(Token.minus.tag);
                 expr();
                 expr();
                 break;
-            case '*':           //E --> *(EL) --- Guida = *
+            case '*':           //E --> *(EL) --- Guida: *
                 match(Token.mult.tag);
                 match(Token.lpt.tag);
                 exprlist();
                 match(Token.rpt.tag);
                 break;
-            case '/':           //E --> /EE --- Guida = /
+            case '/':           //E --> /EE --- Guida: /
                 match(Token.div.tag);
                 expr();
                 expr();
                 break;
-            case Tag.NUM:       //E --> NUM --- Guida = NUM
+            case Tag.NUM:       //E --> NUM --- Guida: NUM
                 match(Tag.NUM);
                 break;
-            case Tag.ID:        //E --> ID --- Guida = ID
+            case Tag.ID:        //E --> ID --- Guida: ID
                 match(Tag.ID);
                 break;
             default:
@@ -212,7 +212,7 @@ public class Parser {
    
     private void exprlist() {       //EL
         switch(look.tag){
-            case '+':               //EL -->  E EL' --- Guida = +,-,*,/,NUM,ID
+            case '+':               //EL -->  E EL' --- Guida: +,-,*,/,NUM,ID
             case '-':
             case '*':
             case '/':
@@ -229,7 +229,7 @@ public class Parser {
 
     private void exprlistp() { //EL'
         switch(look.tag){
-            case '+':          //EL' -->  E EL' --- Guida = +,-,*,/,NUM,ID
+            case '+':          //EL' -->  E EL' --- Guida: +,-,*,/,NUM,ID
             case '-':
             case '*':
             case '/':
@@ -238,7 +238,7 @@ public class Parser {
                 expr();
                 exprlistp();
                 break;
-            case ')':          //EL' --> ϵ --- Guida = )
+            case ')':          //EL' --> ϵ --- Guida: )
                 break;
             default:
                 error("syntax error in grammar (exprlistp): token " + look + " can't be accepted");

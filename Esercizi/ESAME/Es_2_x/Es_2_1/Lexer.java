@@ -70,8 +70,8 @@ public class Lexer {
                 return Token.semicolon;
 
             case '&':
-                readch(br); // leggo il simbolo sucessivo 
-                if (peek == '&') {  // se il simbolo sucessivo e' & allora restituisco il token del and (&&)
+                readch(br); // leggo il simbolo successivo 
+                if (peek == '&') {  // se il simbolo successivo e' & allora restituisco il token del and (&&)
                     peek = ' ';
                     return Word.and;
                 } else {
@@ -82,8 +82,8 @@ public class Lexer {
 
         // ... gestire i casi di ||, <, >, <=, >=, ==, <>, = ... //
             case '|': 
-                readch(br); //leggo il simbolo sucessivo 
-                if(peek == '|'){ // se il simbolo sucessivo è | allora restituisco il token del or (||)
+                readch(br); //leggo il simbolo successivo 
+                if(peek == '|'){ // se il simbolo successivo è | allora restituisco il token del or (||)
                    peek = ' ';
                 return Word.or;
                 }else{
@@ -126,15 +126,15 @@ public class Lexer {
                                                     // se peek non corrisponde a nessuno dei simboli conosciuti
             default:
                 if (Character.isLetter(peek)) {     // se peek è una lettera, potrebbe essere l'inizio di una
-                                                        //parola chiave o di una nuova parola identificatore
+                                                    // parola chiave o di una nuova parola identificatore
 
         // ... gestire il caso degli identificatori e delle parole chiave //
-        /* CDefinizione di identificatori: 
+        /* Definizione di identificatori: 
           un identificatore è composto da una sequenza non vuota di lettere */
 
                 String identificatore = "";
-                while(Character.isLetter(peek)){  //continuo a comporre la stringa s finche trovo una lettera
-                    identificatore += peek; // identificatore = identificatore + peek
+                while(Character.isLetter(peek)){  // continuo a comporre la stringa s finche trovo una lettera
+                    identificatore += peek;       // identificatore = identificatore + peek
                     readch(br);
                 }
 
