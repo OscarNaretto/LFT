@@ -383,7 +383,7 @@ public class Translator {
     public static void main(String[] args) {
 		Lexer lex = new Lexer();
 
-		String path = "test.txt"; 
+		String path = "exam.txt"; 
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(path));
 				Translator translator = new Translator(lex, br); 
